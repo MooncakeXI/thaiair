@@ -9,7 +9,11 @@ requires-python = ">=3.11"
 
 dynamic = ["version"]
 
-dependencies = []
+dependencies = [
+    "pandas>=2.2",
+    "pyarrow>=16",
+    "numpy>=1.26",
+]
 
 [project.optional-dependencies]
 dev = ["pytest"]
