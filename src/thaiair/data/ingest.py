@@ -3,13 +3,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-import pandas as pd
-
-from thaiair.data.sources import synthetic
-
-SOURCES = {
-    "synthetic": synthetic.fetch,
-}
+from thaiair.data.sources import SOURCES
 
 DEFAULT_OUT = Path("data/raw/observations.parquet")
 
