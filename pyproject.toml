@@ -1,0 +1,21 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "thaiair"
+requires-python = ">=3.11"
+
+
+dynamic = ["version"]
+
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.hatch.version]
+path = "src/thaiair/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/thaiair"]
