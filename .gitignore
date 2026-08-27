@@ -1,0 +1,25 @@
+# ⚠️ สังเกต "/" นำหน้า — ห้ามลบออก
+# pattern แบบ `data/` (ไม่มี /) จะ match ทุกโฟลเดอร์ชื่อ data ทุกระดับ
+# รวมถึง src/thaiair/data/ ซึ่งเป็นซอร์สโค้ด → push ขึ้น GitHub แล้วโค้ดหายครึ่งหนึ่ง
+# โดยที่เครื่องตัวเองยังรันปกติ
+/data/
+/models/
+/mlruns/
+
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+.pytest_cache/
+.ruff_cache/
+.coverage
+
+.env
+.env.*
+!.env.example
+
+.vscode/
+.idea/
+.DS_Store
