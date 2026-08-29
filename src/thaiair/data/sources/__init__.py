@@ -4,11 +4,12 @@
 โดยไม่ต้องไปเขียนเทสต์เพิ่มเลย
 """
 
-from thaiair.data.sources import synthetic
+from thaiair.data.sources import openmeteo, synthetic
 from thaiair.data.sources.base import Source
 
 SOURCES: dict[str, Source] = {
     "synthetic": synthetic.fetch,
+    "openmeteo": openmeteo.fetch,
 }
 
 __all__ = ["SOURCES", "Source"]

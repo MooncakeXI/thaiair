@@ -15,14 +15,28 @@ import thaiair.data.sources as sources_pkg
 from thaiair.data.schema import KEY, PARAMETERS, SCHEMA
 from thaiair.data.sources import SOURCES
 
+import json
+from pathlib import Path
+
+import httpx
+
+from thaiair.data.sources import openmeteo
+
+FIXTURES = Path(__file__).parent / "fixtures" 
 # ชื่อโมดูลที่ไม่นับเป็นแหล่งข้อมูล
 NOT_A_SOURCE = {"base"}
 
 
 @pytest.fixture(params=sorted(SOURCES), ids=sorted(SOURCES))
 def frame(request: pytest.FixtureRequest) -> pd.DataFrame:
-    """ดึงข้อมูลช่วงสั้นๆ จากทุกแหล่งในทะเบียน ทีละแหล่ง"""
-    return SOURCES[request.param](days=3)
+    name = request.param
+    kwargs = OFFLINE_KWARGS[name]() if name in OFFLINE_KWARGS else {}
+    client = kwargs.get("client")
+    try:
+        yield SOURCES[name](days=3, **kwargs)
+    finally:
+        if client is not None:
+            client.close()
 
 
 def test_has_exactly_the_contract_columns(frame):
@@ -74,3 +88,54 @@ def test_every_source_module_is_registered():
         f"เขียนแล้วแต่ไม่ได้ลงทะเบียน: {sorted(modules - set(SOURCES))} · "
         f"ลงทะเบียนแล้วแต่ไม่มีโมดูล: {sorted(set(SOURCES) - modules)}"
     )
+
+def _canned_client(payload: dict) -> httpx.Client:
+    """client ที่ตอบด้วย payload เดิมเสมอ ไม่แตะเน็ต"""
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, json=payload)
+
+    return httpx.Client(transport=httpx.MockTransport(handler))
+
+
+def _openmeteo_offline() -> dict:
+    payload = json.loads((FIXTURES / "openmeteo_air_quality.json").read_text())
+    return {"client": _canned_client(payload)}
+
+
+# แหล่งที่ต้องใช้เน็ต → ต้องมีวิธีทำให้ทำงานแบบออฟไลน์
+OFFLINE_KWARGS = {
+    "openmeteo": _openmeteo_offline,
+}
+
+def test_openmeteo_never_sends_timezone_param():
+    """กันคนเติม timezone= เข้าไปในอนาคต
+
+    ด่านใน parse_air_quality() ตรวจ "คำตอบ"
+    เทสต์ตัวนี้ตรวจ "คำขอ" — สองชั้นคนละจุด
+    """
+    payload = json.loads((FIXTURES / "openmeteo_air_quality.json").read_text())
+    seen: list[dict] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen.append(dict(request.url.params))
+        return httpx.Response(200, json=payload)
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as client:
+        openmeteo.fetch(days=1, locations=["bangkok"], client=client)
+
+    assert seen, "ไม่มีการยิง request เลย"
+    for params in seen:
+        assert "timezone" not in params, f"เผลอส่ง timezone ไป: {params}"
+
+
+@pytest.mark.live
+def test_openmeteo_live_still_matches_our_parser():
+    """ยิง API จริงเพื่อดูว่าเขายังไม่เปลี่ยนรูปแบบ
+
+    ไม่รันโดยปริยาย — สั่งเองด้วย `pytest -m live`
+    รันสัปดาห์ละครั้งก็พอ วันที่มันแดงคือวันที่ Open-Meteo เปลี่ยน API
+    """
+    df = openmeteo.fetch(days=1, locations=["bangkok"])
+    assert len(df) > 0
+    assert set(df.columns) == set(SCHEMA)
