@@ -24,6 +24,8 @@ DEFAULT_RAW = Path("data/raw/observations.parquet")
 # station_id เป็นข้อความ ยังไม่ใส่ในรอบนี้ — เก็บไว้ปรับปรุงทีหลัง
 NOT_FEATURES = {"timestamp", "station_id", "target"}
 
+BURNING_MONTHS = {12, 1, 2, 3, 4}
+
 
 def mae(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     return float(np.mean(np.abs(y_true - y_pred)))
@@ -52,6 +54,36 @@ def chronological_split(
     train = frame[frame["timestamp"] < cutoff]
     test = frame[frame["timestamp"] >= cutoff]
     return train, test, pd.Timestamp(cutoff)
+
+
+def report_by_season(
+    test: pd.DataFrame,
+    y_true: np.ndarray,
+    baseline_pred: np.ndarray,
+    model_pred: np.ndarray,
+) -> None:
+    """แยกผลตามฤดู — MAE ตัวเดียวกลบความจริงว่าอ่อนตรงไหน
+
+    ถ้าตารางนี้โผล่มาแค่ฤดูเดียว นั่นคือคำเตือนในตัวมันเอง:
+    แปลว่าอีกฤดูไม่เคยถูกทดสอบเลย
+    """
+    sliced = pd.DataFrame(
+        {
+            "season": np.where(test["timestamp"].dt.month.isin(BURNING_MONTHS), "หน้าเผา", "หน้าฝน"),
+            "y": y_true,
+            "baseline": baseline_pred,
+            "model": model_pred,
+        }
+    )
+
+    print("\nแยกตามฤดู:")
+    for season, group in sliced.groupby("season"):
+        b = mae(group["y"].to_numpy(), group["baseline"].to_numpy())
+        m = mae(group["y"].to_numpy(), group["model"].to_numpy())
+        print(
+            f"  {season}  n={len(group):6,}   "
+            f"baseline={b:6.3f}   model={m:6.3f}   ดีขึ้น {(b - m) / b * 100:+5.1f}%"
+        )
 
 
 def main() -> None:
@@ -101,11 +133,16 @@ def main() -> None:
     print(f"จุดตัด     : {cutoff}")
     print(f"ฟีเจอร์    : {len(feature_cols)} คอลัมน์")
     print()
-    print(f"baseline (persistence)  MAE = {baseline_mae:7.3f}   RMSE = {rmse(y_test, baseline_pred):7.3f}")
-    print(f"model                   MAE = {model_mae:7.3f}   RMSE = {rmse(y_test, model_pred):7.3f}")
+    print(
+        f"baseline (persistence)  MAE = {baseline_mae:7.3f}   RMSE = {rmse(y_test, baseline_pred):7.3f}"
+    )
+    print(
+        f"model                   MAE = {model_mae:7.3f}   RMSE = {rmse(y_test, model_pred):7.3f}"
+    )
     print()
     print(f"ดีขึ้น {improvement:+.1f}%")
 
+    report_by_season(test, y_test, baseline_pred, model_pred)
     if improvement < args.min_improvement:
         print(
             f"\n❌ ไม่ผ่าน — ต้องดีกว่า baseline อย่างน้อย {args.min_improvement:.1f}%",
