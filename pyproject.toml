@@ -15,10 +15,12 @@ dependencies = [
     "numpy>=1.26",
     "httpx>=0.27",
     "scikit-learn>=1.5",
+    "joblib>=1.4",
 ]
 
 [project.optional-dependencies]
 dev = ["pytest", "ruff"]
+serving = ["fastapi>=0.115", "uvicorn[standard]>=0.30"]
 
 [tool.hatch.version]
 path = "src/thaiair/__init__.py"

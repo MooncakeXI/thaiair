@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+from datetime import UTC, datetime
 from pathlib import Path
 
 import numpy as np
@@ -17,6 +18,7 @@ import pandas as pd
 from sklearn.ensemble import HistGradientBoostingRegressor
 
 from thaiair.features.build import build_features
+from thaiair.models import artifact
 
 DEFAULT_RAW = Path("data/raw/observations.parquet")
 
@@ -86,11 +88,22 @@ def report_by_season(
         )
 
 
+def feature_columns(frame: pd.DataFrame) -> list[str]:
+    """คอลัมน์ที่โมเดลใช้ — เรียงแน่นอนทุกครั้ง
+
+    แยกออกมาเพราะเทสต์ต้องใช้ตัวเดียวกับที่เทรนใช้
+    ถ้าเทสต์คำนวณเอง มันจะไม่ได้ทดสอบเส้นทางจริง — ซึ่งคือ skew ที่เรากำลังกันอยู่พอดี
+    """
+    return sorted(c for c in frame.columns if c not in NOT_FEATURES)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="เทรนโมเดลแล้วเทียบกับ baseline")
     parser.add_argument("--raw", type=Path, default=DEFAULT_RAW)
     parser.add_argument("--horizon", type=int, default=1)
     parser.add_argument("--test-fraction", type=float, default=0.2)
+    parser.add_argument("--out", type=Path, default=artifact.DEFAULT_PATH)
+    parser.add_argument("--no-save", action="store_true", help="เทรนเพื่อวัดผลอย่างเดียว ไม่บันทึก")
     parser.add_argument(
         "--min-improvement",
         type=float,
@@ -108,7 +121,7 @@ def main() -> None:
     frame = frame.dropna(subset=["target", "pm25"])
 
     train, test, cutoff = chronological_split(frame, args.test_fraction)
-    feature_cols = sorted(c for c in frame.columns if c not in NOT_FEATURES)
+    feature_cols = feature_columns(frame)
 
     y_test = test["target"].to_numpy()
 
@@ -151,6 +164,26 @@ def main() -> None:
         sys.exit(1)
 
     print("\n✅ ผ่าน")
+
+    if args.no_save:
+        return
+
+    saved = artifact.save(
+        {
+            "model": model,
+            "feature_columns": feature_cols,
+            "horizon": args.horizon,
+            "trained_at": datetime.now(UTC).isoformat(timespec="seconds"),
+            "train_range": (str(train.timestamp.min()), str(train.timestamp.max())),
+            "metrics": {
+                "baseline_mae": baseline_mae,
+                "model_mae": model_mae,
+                "improvement_pct": improvement,
+            },
+        },
+        args.out,
+    )
+    print(f"บันทึกโมเดล → {saved}")
 
 
 if __name__ == "__main__":
