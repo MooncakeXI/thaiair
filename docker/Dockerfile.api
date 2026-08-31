@@ -1,0 +1,29 @@
+FROM python:3.14-slim AS builder
+
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+WORKDIR /build
+COPY pyproject.toml ./
+COPY src/ ./src/
+
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install ".[serving]"
+
+FROM python:3.14-slim
+
+RUN useradd --create-home --uid 1000 app
+
+COPY --from=builder --chown=app:app /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH" \
+    PYTHONUNBUFFERED=1
+
+USER app
+WORKDIR /home/app
+
+EXPOSE 8000
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=20s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')" || exit 1
+
+CMD ["uvicorn", "thaiair.api.app:app", "--host", "0.0.0.0", "--port", "8000"]

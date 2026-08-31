@@ -1,0 +1,25 @@
+.git/
+.venv/
+venv/
+
+# ข้อมูลกับโมเดลไม่เข้า image — เดี๋ยว mount เข้าไปตอนรัน
+data/
+models/
+mlruns/
+
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+
+# image ที่เอาไว้เสิร์ฟไม่ต้องมีเทสต์กับเอกสาร
+tests/
+docs/
+infra/
+*.md
+
+.env
+.env.*
