@@ -17,7 +17,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest"]
+dev = ["pytest", "ruff"]
 
 [tool.hatch.version]
 path = "src/thaiair/__init__.py"
@@ -30,3 +30,21 @@ markers = [
     "live: ยิง API จริง — ไม่รันโดยปริยาย ใช้ `pytest -m live`",
 ]
 addopts = "-m 'not live'"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle — ผิดรูปแบบพื้นฐาน
+    "F",    # pyflakes — ตัวแปรไม่ได้ใช้, ชื่อที่ไม่มีอยู่จริง  ← สองบั๊กที่เราเจอมาแล้ว
+    "I",    # isort — เรียง import
+    "UP",   # pyupgrade — ไวยากรณ์เก่าที่มีของใหม่กว่าแล้ว
+    "B",    # bugbear — รูปแบบที่มักกลายเป็นบั๊ก
+    "SIM",  # simplify — เขียนให้สั้นลงได้
+]
+
+# ปิดการเช็คความยาวบรรทัด: ruff format จัดการโค้ดให้อยู่แล้ว
+# ส่วนคอมเมนต์ภาษาไทยเป็นร้อยแก้ว การตัดบรรทัดที่ 100 ตัวอักษรทำให้อ่านยากกว่าเดิม
+ignore = ["E501"]

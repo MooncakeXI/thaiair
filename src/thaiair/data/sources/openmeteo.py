@@ -113,7 +113,8 @@ def fetch(
         # ตัดเงียบๆ คือการโกหกผู้เรียก — บอกให้รู้
         log.warning(
             "ขอ %d วัน แต่ Open-Meteo ให้ย้อนหลังได้สูงสุด %d วัน — ตัดให้แล้ว",
-            days, MAX_PAST_DAYS,
+            days,
+            MAX_PAST_DAYS,
         )
         past_days = MAX_PAST_DAYS
 

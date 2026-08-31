@@ -6,23 +6,19 @@
 
 from __future__ import annotations
 
+import json
 import pkgutil
+from pathlib import Path
 
+import httpx
 import pandas as pd
 import pytest
 
 import thaiair.data.sources as sources_pkg
 from thaiair.data.schema import KEY, PARAMETERS, SCHEMA
-from thaiair.data.sources import SOURCES
+from thaiair.data.sources import SOURCES, openmeteo
 
-import json
-from pathlib import Path
-
-import httpx
-
-from thaiair.data.sources import openmeteo
-
-FIXTURES = Path(__file__).parent / "fixtures" 
+FIXTURES = Path(__file__).parent / "fixtures"
 # ชื่อโมดูลที่ไม่นับเป็นแหล่งข้อมูล
 NOT_A_SOURCE = {"base"}
 
@@ -89,6 +85,7 @@ def test_every_source_module_is_registered():
         f"ลงทะเบียนแล้วแต่ไม่มีโมดูล: {sorted(set(SOURCES) - modules)}"
     )
 
+
 def _canned_client(payload: dict) -> httpx.Client:
     """client ที่ตอบด้วย payload เดิมเสมอ ไม่แตะเน็ต"""
 
@@ -107,6 +104,7 @@ def _openmeteo_offline() -> dict:
 OFFLINE_KWARGS = {
     "openmeteo": _openmeteo_offline,
 }
+
 
 def test_openmeteo_never_sends_timezone_param():
     """กันคนเติม timezone= เข้าไปในอนาคต

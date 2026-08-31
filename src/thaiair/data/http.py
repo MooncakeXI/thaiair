@@ -74,7 +74,11 @@ def get_json(
                     wait = _sleep_seconds(attempt, response.headers.get("Retry-After"))
                     log.warning(
                         "got %s from %s, retrying in %.1fs (attempt %d/%d)",
-                        response.status_code, url, wait, attempt + 1, MAX_ATTEMPTS,
+                        response.status_code,
+                        url,
+                        wait,
+                        attempt + 1,
+                        MAX_ATTEMPTS,
                     )
                     last_error = httpx.HTTPStatusError(
                         f"HTTP {response.status_code}",
@@ -95,9 +99,7 @@ def get_json(
                 log.warning("network error: %s, retrying in %.1fs", exc, wait)
                 time.sleep(wait)
 
-        raise RuntimeError(
-            f"ยิง {url} ไม่สำเร็จหลังลอง {MAX_ATTEMPTS} ครั้ง"
-        ) from last_error
+        raise RuntimeError(f"ยิง {url} ไม่สำเร็จหลังลอง {MAX_ATTEMPTS} ครั้ง") from last_error
 
     finally:
         # ปิดเฉพาะ client ที่เราสร้างเอง — ของที่คนอื่นส่งมาให้ เขาปิดเอง

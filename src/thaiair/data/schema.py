@@ -32,6 +32,8 @@ SCHEMA: dict[str, str] = {
 # สามคอลัมน์นี้รวมกันคือ "ตัวตน" ของหนึ่งแถว
 KEY = ["timestamp", "station_id", "parameter"]
 
+BANGKOK_UTC_OFFSET = 7
+
 
 def conform(df: pd.DataFrame) -> pd.DataFrame:
     """บังคับตารางให้ตรงตามสัญญา — ทุกแหล่งข้อมูลต้องเรียกฟังก์ชันนี้ก่อนคืนค่า
@@ -65,10 +67,6 @@ def conform(df: pd.DataFrame) -> pd.DataFrame:
 
     # keep="last" = ถ้าคีย์ซ้ำ ให้ค่าที่มาทีหลังชนะ
     # เพราะแหล่งข้อมูลมักส่งค่าแก้ไขตามมาทีหลัง (ค่าที่ผ่านการตรวจสอบแล้ว)
-    out = (
-        out.sort_values(KEY)
-        .drop_duplicates(subset=KEY, keep="last")
-        .reset_index(drop=True)
-    )
+    out = out.sort_values(KEY).drop_duplicates(subset=KEY, keep="last").reset_index(drop=True)
 
     return out

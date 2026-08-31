@@ -13,9 +13,7 @@ from collections.abc import Sequence
 import numpy as np
 import pandas as pd
 
-from thaiair.data.schema import conform
-
-BANGKOK_UTC_OFFSET = 7
+from thaiair.data.schema import BANGKOK_UTC_OFFSET, conform
 
 STATIONS: tuple[str, ...] = ("bkk-01", "bkk-02", "bkk-03")
 
@@ -37,7 +35,6 @@ def fetch(
 
     ts = pd.date_range(end=end_ts, periods=days * 24, freq="h")
 
-
     local_hour = (ts.hour.to_numpy() + BANGKOK_UTC_OFFSET) % 24
     doy = ts.dayofyear.to_numpy()
 
@@ -49,9 +46,8 @@ def fetch(
 
         seasonal = 25 * np.cos(2 * np.pi * (doy - 15) / 365)
 
-        daily = (
-            12 * np.exp(-((local_hour - 8) ** 2) / 6)
-            + 10 * np.exp(-((local_hour - 19) ** 2) / 8)
+        daily = 12 * np.exp(-((local_hour - 8) ** 2) / 6) + 10 * np.exp(
+            -((local_hour - 19) ** 2) / 8
         )
 
         pm25 = 35 + seasonal + daily - 4.0 * wind + rng.normal(0, 6, n)
