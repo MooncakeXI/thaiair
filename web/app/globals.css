@@ -68,11 +68,11 @@ button { color: inherit; }
 .time-control { border-bottom: 1px solid var(--line); }
 .time-control > div:first-child { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
 .time-control span, .station-heading span, .station-browser label { color: var(--muted); font-size: .74rem; font-weight: 800; letter-spacing: .04em; }
-.time-control > div:first-child strong { font-size: 1.1rem; }
-.time-options { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 16px; }
-.time-options button { min-height: 34px; border: 1px solid var(--line); border-radius: 9px; color: var(--muted); background: transparent; font-size: .7rem; font-weight: 800; cursor: pointer; }
-.time-options button:hover { border-color: var(--ink); color: var(--ink); }
-.time-options button[aria-pressed="true"] { border-color: var(--ink); color: var(--card); background: var(--ink); }
+.time-control > div:first-child strong { font-size: .9rem; text-align: right; }
+.time-control input { width: 100%; margin: 20px 0 8px; accent-color: var(--ink); cursor: pointer; }
+.time-ticks { display: flex; justify-content: space-between; gap: 16px; }
+.time-ticks span { max-width: 46%; font-size: .61rem; font-weight: 600; line-height: 1.35; }
+.time-ticks span:last-child { text-align: right; }
 
 .reading-card { --tone: #9aa7a5; border-bottom: 1px solid var(--line); }
 .station-heading { display: flex; justify-content: space-between; gap: 16px; }

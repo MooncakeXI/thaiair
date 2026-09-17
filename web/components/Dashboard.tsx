@@ -50,6 +50,10 @@ export function Dashboard() {
   const horizon = horizons[safeIndex];
   const selected = data?.stations.find((station) => station.station_id === selectedId);
   const reading = selected ? readingFor(selected, horizon) : null;
+  const readingTime = horizon === 0 ? reading?.timestamp : reading?.predicted_for;
+  const lastHorizon = horizons.at(-1) ?? 0;
+  const lastReading = selected ? readingFor(selected, lastHorizon) : null;
+  const lastReadingTime = lastHorizon === 0 ? lastReading?.timestamp : lastReading?.predicted_for;
   const filtered = useMemo(() => {
     const needle = query.trim().toLocaleLowerCase("th");
     if (!needle) return data?.stations ?? [];
@@ -90,14 +94,18 @@ export function Dashboard() {
 
         <aside className="detail-panel">
           <div className="time-control">
-            <div><span>ช่วงเวลา</span><strong>{horizon === 0 ? "ตอนนี้" : `อีก ${horizon} ชั่วโมง`}</strong></div>
-            <div className="time-options" role="group" aria-label="เลือกช่วงเวลาพยากรณ์">
-              {horizons.map((hours, index) => <button
-                key={hours}
-                aria-pressed={index === safeIndex}
-                onClick={() => setHorizonIndex(index)}
-              >{hours === 0 ? "ตอนนี้" : `+${hours}`}</button>)}
-            </div>
+            <div><span>ช่วงเวลา</span><strong>{thaiTime(readingTime)}</strong></div>
+            <input
+              aria-label="เลือกเวลาพยากรณ์"
+              aria-valuetext={thaiTime(readingTime)}
+              type="range"
+              min="0"
+              max={Math.max(horizons.length - 1, 0)}
+              step="1"
+              value={safeIndex}
+              onChange={(event) => setHorizonIndex(Number(event.target.value))}
+            />
+            <div className="time-ticks"><span>{thaiTime(selected?.observed.timestamp)}</span><span>{thaiTime(lastReadingTime)}</span></div>
           </div>
 
           {selected && reading ? (
@@ -105,9 +113,9 @@ export function Dashboard() {
               <div className="station-heading"><div><span>สถานีที่เลือก</span><h2>{selected.name}</h2></div><i /></div>
               <div className="reading"><strong>{reading.pm25 ?? "—"}</strong><span>µg/m³<br />PM2.5</span></div>
               <div className="level-pill">{reading.level || "ข้อมูลไม่พอ"}</div>
-              <WeatherPanel station={selected} targetTime={horizon === 0 ? reading.timestamp : reading.predicted_for} />
+              <WeatherPanel station={selected} targetTime={readingTime} />
               <dl>
-                <div><dt>{horizon === 0 ? "เวลาตรวจวัด" : "เวลาที่พยากรณ์"}</dt><dd>{thaiTime(horizon === 0 ? reading.timestamp : reading.predicted_for)}</dd></div>
+                <div><dt>{horizon === 0 ? "เวลาตรวจวัด" : "เวลาที่พยากรณ์"}</dt><dd>{thaiTime(readingTime)}</dd></div>
                 <div><dt>แหล่งข้อมูล</dt><dd>{selected.provider}</dd></div>
                 <div><dt>วิธีคาดการณ์</dt><dd>{horizon === 0 ? "ค่าตรวจวัด" : methodLabel(reading.method)}</dd></div>
                 <div><dt>ความสดของข้อมูล</dt><dd>{selected.freshness === "fresh" ? "ไม่เกิน 3 ชั่วโมง" : selected.freshness === "stale" ? "เก่ากว่า 3 ชั่วโมง" : "ข้อมูลเก่าเกินไป"}</dd></div>

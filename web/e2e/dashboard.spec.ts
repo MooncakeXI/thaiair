@@ -43,8 +43,8 @@ test("เลือกเวลาพยากรณ์และเห็นค�
   await page.goto("/");
   await expect(page.getByRole("heading", {name: /วันนี้ถึงพรุ่งนี้/})).toBeVisible();
   await expect(page.getByRole("heading", {name: station.name})).toBeVisible();
-  await page.getByRole("button", {name: "+3", exact: true}).click();
-  await expect(page.getByText("อีก 3 ชั่วโมง")).toBeVisible();
+  await page.getByLabel("เลือกเวลาพยากรณ์").fill("1");
+  await expect(page.locator(".time-control strong")).toContainText("13:00");
   await expect(page.getByText("21", {exact: true})).toBeVisible();
   await expect(page.locator(".weather-grid strong").nth(0)).toContainText("31");
   await expect(page.locator(".weather-grid strong").nth(2)).toContainText("70");
