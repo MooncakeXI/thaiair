@@ -25,7 +25,7 @@ jobs:
             test "$attempt" -lt 30 || { docker logs thaiair-api; exit 1; }
             sleep 1
           done
-          curl -fsSI http://localhost:8000/ | grep -qi 'location: https://thaiair-web.vercel.app'
+          curl -fsS -o /dev/null -D - http://localhost:8000/ | grep -qi 'location: https://thaiair-web.vercel.app'
           curl -fsS http://localhost:8000/map-data | grep -q available_horizons
           curl -fsS http://localhost:8000/stations | grep -q 'oa:135:5077838'
           curl -fsS -X POST http://localhost:8000/predict \
