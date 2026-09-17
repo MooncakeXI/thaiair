@@ -110,11 +110,10 @@ def test_ready_reports_model_metadata(client):
     assert body["available_horizons"] == [3, 24]
 
 
-def test_home_serves_frontend(client):
-    response = client.get("/")
-    assert response.status_code == 200
-    assert "ThaiAir" in response.text
-    assert response.headers["content-type"].startswith("text/html")
+def test_home_redirects_to_frontend(client):
+    response = client.get("/", follow_redirects=False)
+    assert response.status_code == 307
+    assert response.headers["location"] == "https://thaiair-web.vercel.app"
 
 
 def test_stations_are_sorted(client):

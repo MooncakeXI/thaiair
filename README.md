@@ -3,6 +3,8 @@
 เว็บแผนที่ PM2.5 รอบกรุงเทพฯ 25 กิโลเมตร แสดงค่าตรวจวัดล่าสุดจาก OpenAQ และเลือกดู
 พยากรณ์ล่วงหน้าทุก 3 ชั่วโมงจนถึง 24 ชั่วโมงได้
 
+หน้าเว็บจริง: https://thaiair-web.vercel.app
+
 - Frontend: Next.js แบบ static export สำหรับ Vercel
 - API: FastAPI บน Render Free
 - Model: HistGradientBoostingRegressor; ช่วงที่โมเดลไม่ชนะ baseline จะใช้ค่าล่าสุดและแสดงป้ายกำกับตรง ๆ
@@ -43,7 +45,7 @@ npm run dev
 2. ตั้ง secret `OPENAQ_API_KEY` ใน Render เพื่อเปิด hourly refresh
 3. สร้าง Vercel project โดยเลือก Root Directory เป็น `web`
 4. ตั้ง `NEXT_PUBLIC_API_URL=https://thaiair-api.onrender.com` ใน Vercel แล้ว deploy
-5. นำ URL ที่ Vercel ให้ไปตั้งใน Render เป็นทั้ง `WEB_APP_URL` และ `CORS_ORIGINS`
+5. ถ้าเปลี่ยนโดเมน ให้ตั้ง URL ใหม่ใน Render เป็นทั้ง `WEB_APP_URL` และ `CORS_ORIGINS`
 
 เมื่อไม่มี traffic Render Free อาจพัก service ทำให้คำขอแรกช้าได้ ตัวหน้าเว็บจะแจ้งสถานะนี้ให้ผู้ใช้ทราบ
 ไม่ต้องใช้ Airflow หรือฐานข้อมูลสำหรับเวอร์ชันนี้

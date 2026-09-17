@@ -233,7 +233,9 @@ app = FastAPI(title="ThaiAir — PM2.5 forecast", lifespan=lifespan)
 
 cors_origins = [
     origin.strip()
-    for origin in os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")
+    for origin in os.getenv(
+        "CORS_ORIGINS", "http://localhost:3000,https://thaiair-web.vercel.app"
+    ).split(",")
     if origin.strip()
 ]
 app.add_middleware(
@@ -265,7 +267,7 @@ class PredictResponse(BaseModel):
 
 @app.get("/", include_in_schema=False)
 def home() -> Response:
-    web_app_url = os.getenv("WEB_APP_URL", "").strip()
+    web_app_url = os.getenv("WEB_APP_URL", "https://thaiair-web.vercel.app").strip()
     return RedirectResponse(web_app_url) if web_app_url else FileResponse(INDEX_PATH)
 
 
