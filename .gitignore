@@ -3,6 +3,7 @@
 !/data/raw/
 /data/raw/*
 !/data/raw/observations.parquet
+!/data/raw/stations.json
 /models/*
 !/models/pm25.joblib
 /mlruns/
@@ -24,3 +25,9 @@ venv/
 .vscode/
 .idea/
 .DS_Store
+
+/web/node_modules/
+/web/.next/
+/web/out/
+/web/test-results/
+/web/playwright-report/

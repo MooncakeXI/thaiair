@@ -203,6 +203,24 @@ def test_openaq_requires_api_key(monkeypatch):
         openaq.fetch()
 
 
+def test_openaq_discovery_returns_map_metadata():
+    payload = json.loads((FIXTURES / "openaq.json").read_text())
+    with _canned_client(payload["locations"]) as client:
+        stations = openaq.discover(api_key="secret", client=client)
+
+    assert stations == [
+        {
+            "station_id": "oa:42:4202",
+            "location_id": 42,
+            "sensor_id": 4202,
+            "name": "Bangkok reference station",
+            "latitude": 13.7563,
+            "longitude": 100.5018,
+            "provider": "Test provider",
+        }
+    ]
+
+
 @pytest.mark.live
 def test_openmeteo_live_still_matches_our_parser():
     """ยิง API จริงเพื่อดูว่าเขายังไม่เปลี่ยนรูปแบบ

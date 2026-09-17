@@ -21,6 +21,7 @@ ENV PATH="/opt/venv/bin:$PATH" \
 
 WORKDIR /home/app
 COPY --chown=app:app data/raw/observations.parquet data/raw/observations.parquet
+COPY --chown=app:app data/raw/stations.json data/raw/stations.json
 COPY --chown=app:app models/pm25.joblib models/pm25.joblib
 
 USER app

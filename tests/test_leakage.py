@@ -124,3 +124,22 @@ def test_expected_feature_columns_are_present(walk):
     )
     missing = expected - set(features.columns)
     assert not missing, f"ฟีเจอร์หายไป: {sorted(missing)}"
+
+
+def test_lags_follow_clock_hours_when_an_observation_is_missing():
+    ts = pd.date_range("2026-01-01", periods=26, freq="h").delete(10)
+    long = conform(
+        pd.DataFrame(
+            {
+                "timestamp": ts,
+                "station_id": "s1",
+                "parameter": "pm25",
+                "value": range(len(ts)),
+            }
+        )
+    )
+
+    features = build_features(long, horizon=1).set_index("timestamp")
+
+    assert pd.isna(features.loc[pd.Timestamp("2026-01-01 10:00"), "pm25"])
+    assert pd.isna(features.loc[pd.Timestamp("2026-01-01 11:00"), "pm25_lag1"])

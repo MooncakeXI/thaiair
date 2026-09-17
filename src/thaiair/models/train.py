@@ -1,15 +1,13 @@
-"""เทรนโมเดลแล้วเทียบกับ baseline
+"""เทรนโมเดลหลายช่วงเวลาแล้วเลือกตัวที่ชนะ baseline
 
     python -m thaiair.models.train
 
-กติกา: ถ้าแพ้ baseline ให้ exit code ไม่เป็น 0
-CI ในขั้น 7 จะได้จับได้เองโดยไม่ต้องมีคนมานั่งอ่าน
+ช่วงเวลาใดแพ้ baseline จะใช้ persistence แทน ไม่บันทึกโมเดลที่แย่กว่า
 """
 
 from __future__ import annotations
 
 import argparse
-import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -87,10 +85,7 @@ def report_by_season(
         # mae() คืน Python float ไม่ใช่ numpy float → ZeroDivisionError ไม่ใช่ nan
         delta = f"{(b - m) / b * 100:+5.1f}%" if b else "  n/a"
 
-        print(
-            f"  {season}  n={len(group):6,}   "
-            f"baseline={b:6.3f}   model={m:6.3f}   ดีขึ้น {delta}"
-        )
+        print(f"  {season}  n={len(group):6,}   baseline={b:6.3f}   model={m:6.3f}   ดีขึ้น {delta}")
 
 
 def feature_columns(frame: pd.DataFrame) -> list[str]:
@@ -102,10 +97,68 @@ def feature_columns(frame: pd.DataFrame) -> list[str]:
     return sorted(c for c in frame.columns if c not in NOT_FEATURES)
 
 
+def train_one(
+    raw: pd.DataFrame,
+    *,
+    horizon: int,
+    test_fraction: float,
+    min_improvement: float,
+) -> tuple[dict, list[str], tuple[str, str]]:
+    frame = build_features(raw, horizon=horizon).dropna(subset=["target", "pm25"])
+    train, test, cutoff = chronological_split(frame, test_fraction)
+    if train.empty or test.empty:
+        raise ValueError(f"horizon {horizon}: แบ่งข้อมูลแล้วเหลือ train={len(train)} test={len(test)}")
+
+    columns = feature_columns(frame)
+    y_test = test["target"].to_numpy()
+    baseline_pred = test["pm25"].to_numpy()
+    baseline_mae = mae(y_test, baseline_pred)
+
+    model = HistGradientBoostingRegressor(
+        max_iter=300,
+        learning_rate=0.05,
+        random_state=0,
+    )
+    model.fit(train[columns], train["target"])
+    model_pred = model.predict(test[columns])
+    model_mae = mae(y_test, model_pred)
+    improvement = (baseline_mae - model_mae) / baseline_mae * 100 if baseline_mae else 0.0
+    method = "model" if improvement >= min_improvement and baseline_mae else "persistence"
+
+    print(f"\n=== +{horizon} ชั่วโมง · {method} ===")
+    print(
+        f"ช่วงเทรน   : {train['timestamp'].min()} → {train['timestamp'].max()}  ({len(train):,} แถว)"
+    )
+    print(f"ช่วงทดสอบ  : {test['timestamp'].min()} → {test['timestamp'].max()}  ({len(test):,} แถว)")
+    print(f"จุดตัด     : {cutoff}")
+    print(f"baseline MAE={baseline_mae:.3f} · model MAE={model_mae:.3f} · ดีขึ้น {improvement:+.1f}%")
+    report_by_season(test, y_test, baseline_pred, model_pred)
+
+    metrics = {
+        "baseline_mae": baseline_mae,
+        "baseline_rmse": rmse(y_test, baseline_pred),
+        "model_mae": model_mae,
+        "model_rmse": rmse(y_test, model_pred),
+        "improvement_pct": improvement,
+    }
+    return (
+        {"method": method, "model": model if method == "model" else None, "metrics": metrics},
+        columns,
+        (str(train["timestamp"].min()), str(train["timestamp"].max())),
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="เทรนโมเดลแล้วเทียบกับ baseline")
     parser.add_argument("--raw", type=Path, default=DEFAULT_RAW)
-    parser.add_argument("--horizon", type=int, default=24)
+    parser.add_argument("--horizon", type=int, help="เทรนช่วงเวลาเดียว (คงไว้เพื่อ compatibility)")
+    parser.add_argument(
+        "--horizons",
+        type=int,
+        nargs="+",
+        default=list(artifact.DEFAULT_HORIZONS),
+        help="ช่วงเวลาที่ต้องการเทรน ค่าเริ่มต้น 3 ถึง 24 ชั่วโมง ทุก 3 ชั่วโมง",
+    )
     parser.add_argument("--test-fraction", type=float, default=0.2)
     parser.add_argument("--out", type=Path, default=artifact.DEFAULT_PATH)
     parser.add_argument("--no-save", action="store_true", help="เทรนเพื่อวัดผลอย่างเดียว ไม่บันทึก")
@@ -118,97 +171,37 @@ def main() -> None:
     args = parser.parse_args()
 
     raw = pd.read_parquet(args.raw)
-    frame = build_features(raw, horizon=args.horizon)
+    horizons = sorted(set([args.horizon] if args.horizon else args.horizons))
+    if not horizons or horizons[0] < 1:
+        parser.error("horizons ต้องเป็นจำนวนเต็มบวก")
 
-    # แถวที่ไม่มีค่าเป้าหมายใช้ไม่ได้ (แถวสุดท้ายของแต่ละสถานี)
-    # และแถวที่ไม่มีค่าปัจจุบัน baseline ทำนายไม่ได้ —
-    # ต้องตัดออกทั้งคู่เพื่อให้ทั้งสองฝ่ายถูกวัดบน "แถวชุดเดียวกัน"
-    frame = frame.dropna(subset=["target", "pm25"])
-
-    train, test, cutoff = chronological_split(frame, args.test_fraction)
-
-    # 🔴 ด่านสำคัญ: ชุดว่างต้องหยุดที่นี่
-    #
-    # np.mean([]) คืน nan (แค่ warning ไม่ error) แล้ว improvement จะเป็น nan
-    # และ `nan < min_improvement` เป็น False เสมอ — โมเดลที่ไม่ได้ถูกวัดกับข้อมูล
-    # สักแถวจะพิมพ์ "ผ่าน" แล้วบันทึกทับตัวเก่า
-    #
-    # nan ทำให้ guardrail หลุดโดยไม่มีอะไรฟ้อง จึงต้องดักก่อนถึงจุดนั้น
-    if train.empty or test.empty:
-        print(
-            f"❌ แบ่งข้อมูลแล้วเหลือ train={len(train)} test={len(test)} — "
-            "ปรับ --test-fraction หรือเช็คว่าข้อมูลดิบมีพอไหม",
-            file=sys.stderr,
+    forecasters = {}
+    feature_cols = None
+    ranges = []
+    for horizon in horizons:
+        trained, columns, train_range = train_one(
+            raw,
+            horizon=horizon,
+            test_fraction=args.test_fraction,
+            min_improvement=args.min_improvement,
         )
-        sys.exit(1)
-
-    feature_cols = feature_columns(frame)
-
-    y_test = test["target"].to_numpy()
-
-    # ── baseline: ชั่วโมงหน้า = ชั่วโมงนี้ ────────────────────
-    baseline_pred = test["pm25"].to_numpy()
-    baseline_mae = mae(y_test, baseline_pred)
-
-    if baseline_mae == 0:
-        print(
-            "❌ baseline MAE = 0 — ข้อมูลทดสอบไม่มีการเปลี่ยนแปลงเลย เทียบเป็น % ไม่ได้",
-            file=sys.stderr,
-        )
-        sys.exit(1)
-
-    # ── โมเดล ────────────────────────────────────────────────
-    model = HistGradientBoostingRegressor(
-        max_iter=300,
-        learning_rate=0.05,
-        random_state=0,
-    )
-    model.fit(train[feature_cols], train["target"])
-    model_pred = model.predict(test[feature_cols])
-    model_mae = mae(y_test, model_pred)
-
-    improvement = (baseline_mae - model_mae) / baseline_mae * 100
-
-    print(f"ช่วงเทรน   : {train['timestamp'].min()} → {train['timestamp'].max()}  ({len(train):,} แถว)")
-    print(f"ช่วงทดสอบ  : {test['timestamp'].min()} → {test['timestamp'].max()}  ({len(test):,} แถว)")
-    print(f"จุดตัด     : {cutoff}")
-    print(f"ฟีเจอร์    : {len(feature_cols)} คอลัมน์")
-    print()
-    print(
-        f"baseline (persistence)  MAE = {baseline_mae:7.3f}   RMSE = {rmse(y_test, baseline_pred):7.3f}"
-    )
-    print(
-        f"model                   MAE = {model_mae:7.3f}   RMSE = {rmse(y_test, model_pred):7.3f}"
-    )
-    print()
-    print(f"ดีขึ้น {improvement:+.1f}%")
-
-    report_by_season(test, y_test, baseline_pred, model_pred)
-
-    if improvement < args.min_improvement:
-        print(
-            f"\n❌ ไม่ผ่าน — ต้องดีกว่า baseline อย่างน้อย {args.min_improvement:.1f}%",
-            file=sys.stderr,
-        )
-        sys.exit(1)
-
-    print("\n✅ ผ่าน")
+        forecasters[horizon] = trained
+        feature_cols = feature_cols or columns
+        if columns != feature_cols:
+            raise ValueError(f"feature columns ของ horizon {horizon} ไม่ตรงกัน")
+        ranges.append(train_range)
 
     if args.no_save:
         return
 
     saved = artifact.save(
         {
-            "model": model,
+            "schema_version": artifact.SCHEMA_VERSION,
+            "forecasters": forecasters,
             "feature_columns": feature_cols,
-            "horizon": args.horizon,
+            "horizons": horizons,
             "trained_at": datetime.now(UTC).isoformat(timespec="seconds"),
-            "train_range": (str(train["timestamp"].min()), str(train["timestamp"].max())),
-            "metrics": {
-                "baseline_mae": baseline_mae,
-                "model_mae": model_mae,
-                "improvement_pct": improvement,
-            },
+            "train_range": (min(start for start, _ in ranges), max(end for _, end in ranges)),
         },
         args.out,
     )

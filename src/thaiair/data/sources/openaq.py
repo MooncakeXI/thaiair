@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import os
+from datetime import UTC, datetime
 from typing import Any
 
 import httpx
@@ -48,6 +49,46 @@ def _pm25_sensors(payload: dict[str, Any]) -> list[tuple[int, int]]:
     return sorted(set(sensors))
 
 
+def _location_params() -> dict[str, Any]:
+    return {
+        "coordinates": BANGKOK,
+        "radius": RADIUS_METERS,
+        "parameters_id": PM25_PARAMETER_ID,
+        "monitor": True,
+        "mobile": False,
+        "limit": PAGE_SIZE,
+        "page": 1,
+    }
+
+
+def _station_metadata(payload: dict[str, Any]) -> list[dict[str, Any]]:
+    stations = []
+    for location in _results(payload, "locations"):
+        if not location.get("isMonitor") or location.get("isMobile"):
+            continue
+        coordinates = location.get("coordinates") or {}
+        if coordinates.get("latitude") is None or coordinates.get("longitude") is None:
+            continue
+        for sensor in location.get("sensors", []):
+            parameter = sensor.get("parameter", {})
+            if parameter.get("id") != PM25_PARAMETER_ID:
+                continue
+            location_id = int(location["id"])
+            sensor_id = int(sensor["id"])
+            stations.append(
+                {
+                    "station_id": f"{SOURCE_PREFIX}:{location_id}:{sensor_id}",
+                    "location_id": location_id,
+                    "sensor_id": sensor_id,
+                    "name": location.get("name") or f"OpenAQ {location_id}",
+                    "latitude": float(coordinates["latitude"]),
+                    "longitude": float(coordinates["longitude"]),
+                    "provider": (location.get("provider") or {}).get("name") or "OpenAQ",
+                }
+            )
+    return sorted(stations, key=lambda station: station["station_id"])
+
+
 def _unit_is_ug_m3(unit: Any) -> bool:
     normalized = str(unit).lower().replace("µ", "u").replace("μ", "u").replace("³", "3")
     return normalized.replace(" ", "") == "ug/m3"
@@ -78,6 +119,63 @@ def _parse_hours(rows: list[dict[str, Any]], station_id: str) -> list[dict[str, 
     return parsed
 
 
+def discover(
+    *, api_key: str | None = None, client: httpx.Client | None = None
+) -> list[dict[str, Any]]:
+    """คืนชื่อและพิกัดของสถานี PM2.5 รอบกรุงเทพฯ"""
+    key = _key(api_key)
+    owns_client = client is None
+    client = client or httpx.Client(headers={"X-API-Key": key})
+    if not owns_client:
+        client.headers["X-API-Key"] = key
+    try:
+        payload = get_json(f"{BASE_URL}/locations", _location_params(), client=client)
+        return _station_metadata(payload)
+    finally:
+        if owns_client:
+            client.close()
+
+
+def fetch_latest(
+    station: dict[str, Any],
+    *,
+    api_key: str | None = None,
+    client: httpx.Client | None = None,
+    end: pd.Timestamp | str | None = None,
+) -> pd.DataFrame:
+    """ดึงชั่วโมงล่าสุดของ sensor เดียวสำหรับ live cache"""
+    key = _key(api_key)
+    owns_client = client is None
+    client = client or httpx.Client(headers={"X-API-Key": key})
+    if not owns_client:
+        client.headers["X-API-Key"] = key
+
+    try:
+        end_ts = pd.Timestamp(datetime.now(UTC) if end is None else end)
+        end_ts = end_ts.tz_localize("UTC") if end_ts.tzinfo is None else end_ts.tz_convert("UTC")
+        payload = get_json(
+            f"{BASE_URL}/sensors/{station['sensor_id']}/hours",
+            {
+                "datetime_from": (end_ts - pd.Timedelta(hours=6)).isoformat(),
+                "datetime_to": end_ts.isoformat(),
+                "limit": 24,
+                "page": 1,
+            },
+            client=client,
+        )
+        rows = _parse_hours(
+            _results(payload, f"sensor {station['sensor_id']} hours"), station["station_id"]
+        )
+        return (
+            conform(pd.DataFrame.from_records(rows))
+            if rows
+            else conform(pd.DataFrame(columns=["timestamp", "station_id", "parameter", "value"]))
+        )
+    finally:
+        if owns_client:
+            client.close()
+
+
 def fetch(
     *,
     days: int = 30,
@@ -93,19 +191,7 @@ def fetch(
         client.headers["X-API-Key"] = key
 
     try:
-        locations = get_json(
-            f"{BASE_URL}/locations",
-            {
-                "coordinates": BANGKOK,
-                "radius": RADIUS_METERS,
-                "parameters_id": PM25_PARAMETER_ID,
-                "monitor": True,
-                "mobile": False,
-                "limit": PAGE_SIZE,
-                "page": 1,
-            },
-            client=client,
-        )
+        locations = get_json(f"{BASE_URL}/locations", _location_params(), client=client)
         sensors = _pm25_sensors(locations)
         if not sensors:
             raise ValueError("ไม่พบ reference monitor ที่วัด PM2.5 ภายใน 25 กม. ของกรุงเทพ")

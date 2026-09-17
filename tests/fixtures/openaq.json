@@ -3,9 +3,11 @@
     "meta": {"page": 1, "limit": 1000, "found": 1},
     "results": [
       {
-        "id": 42,
-        "name": "Bangkok reference station",
-        "isMobile": false,
+      "id": 42,
+      "name": "Bangkok reference station",
+      "coordinates": {"latitude": 13.7563, "longitude": 100.5018},
+      "provider": {"name": "Test provider"},
+      "isMobile": false,
         "isMonitor": true,
         "sensors": [
           {

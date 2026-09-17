@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import json
+from datetime import UTC, datetime
+
 import pandas as pd
 import pytest
 from fastapi.testclient import TestClient
@@ -26,6 +29,7 @@ def served(tmp_path_factory, module_mocker=None):
     tmp = tmp_path_factory.mktemp("serving")
     raw_path = tmp / "observations.parquet"
     model_path = tmp / "model.joblib"
+    stations_path = tmp / "stations.json"
 
     raw = synthetic.fetch(days=90)
     raw.to_parquet(raw_path, index=False)
@@ -38,16 +42,42 @@ def served(tmp_path_factory, module_mocker=None):
 
     artifact.save(
         {
-            "model": model,
+            "schema_version": 2,
+            "forecasters": {
+                3: {"method": "persistence", "model": None, "metrics": {}},
+                24: {"method": "model", "model": model, "metrics": {}},
+            },
             "feature_columns": columns,
-            "horizon": HORIZON,
+            "horizons": [3, 24],
             "trained_at": "2026-01-01T00:00:00+00:00",
             "train_range": ("x", "y"),
-            "metrics": {},
         },
         model_path,
     )
-    return {"raw_path": raw_path, "model_path": model_path, "raw": raw}
+    stations_path.write_text(
+        json.dumps(
+            {
+                "stations": [
+                    {
+                        "station_id": station,
+                        "location_id": index,
+                        "sensor_id": index,
+                        "name": station,
+                        "latitude": 13.7 + index / 100,
+                        "longitude": 100.5 + index / 100,
+                        "provider": "synthetic",
+                    }
+                    for index, station in enumerate(synthetic.STATIONS, start=1)
+                ]
+            }
+        )
+    )
+    return {
+        "raw_path": raw_path,
+        "model_path": model_path,
+        "stations_path": stations_path,
+        "raw": raw,
+    }
 
 
 @pytest.fixture(scope="module")
@@ -56,14 +86,17 @@ def client(served, monkeypatch_module=None):
 
     os.environ["PM25_MODEL_PATH"] = str(served["model_path"])
     os.environ["PM25_RAW_PATH"] = str(served["raw_path"])
+    os.environ["PM25_STATIONS_PATH"] = str(served["stations_path"])
 
-    from thaiair.api.app import app
+    from thaiair.api.app import _build_map_payload, app, state
 
     with TestClient(app) as c:
+        state.map_payload = _build_map_payload(datetime(2026, 8, 1, 1, tzinfo=UTC))
         yield c
 
     del os.environ["PM25_MODEL_PATH"]
     del os.environ["PM25_RAW_PATH"]
+    del os.environ["PM25_STATIONS_PATH"]
 
 
 def test_health_is_alive_regardless(client):
@@ -74,6 +107,7 @@ def test_ready_reports_model_metadata(client):
     body = client.get("/ready").json()
     assert body["status"] == "ready"
     assert body["horizon_hours"] == HORIZON
+    assert body["available_horizons"] == [3, 24]
 
 
 def test_home_serves_frontend(client):
@@ -89,6 +123,16 @@ def test_stations_are_sorted(client):
     assert STATION in stations
 
 
+def test_map_data_contains_observations_and_all_horizons(client):
+    body = client.get("/map-data").json()
+    station = next(item for item in body["stations"] if item["station_id"] == STATION)
+
+    assert body["available_horizons"] == [0, 3, 24]
+    assert station["observed"]["pm25"] is not None
+    assert [item["horizon_hours"] for item in station["forecasts"]] == [3, 24]
+    assert station["forecasts"][0]["method"] == "persistence"
+
+
 def test_predict_returns_a_number_for_the_right_time(client):
     body = client.post("/predict", json={"station_id": STATION}).json()
 
@@ -98,6 +142,13 @@ def test_predict_returns_a_number_for_the_right_time(client):
     # ช่องว่างต้องเท่ากับ horizon เป๊ะ — ไม่งั้นคนใช้จะเข้าใจผิดว่าค่านี้เป็นของเวลาไหน
     assert predicted_for - based_on == pd.Timedelta(hours=HORIZON)
     assert isinstance(body["pm25"], float)
+    assert body["method"] == "model"
+
+
+def test_predict_supports_another_horizon(client):
+    body = client.post("/predict", json={"station_id": STATION, "horizon_hours": 3}).json()
+    assert body["horizon_hours"] == 3
+    assert body["method"] == "persistence"
 
 
 def test_unknown_station_gives_404_not_500(client):
@@ -114,9 +165,11 @@ def test_api_prediction_matches_the_training_path(client, served):
     """
     art = artifact.load(served["model_path"])
 
-    frame = build_features(served["raw"], horizon=art["horizon"])
+    frame = build_features(served["raw"], horizon=HORIZON)
     row = frame[frame["station_id"] == STATION].iloc[[-1]]
-    expected = float(art["model"].predict(row[art["feature_columns"]])[0])
+    expected = float(
+        artifact.forecaster(art, HORIZON)["model"].predict(row[art["feature_columns"]])[0]
+    )
 
     got = client.post("/predict", json={"station_id": STATION}).json()["pm25"]
 

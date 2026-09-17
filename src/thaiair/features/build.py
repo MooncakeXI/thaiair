@@ -36,9 +36,24 @@ def to_wide(long: pd.DataFrame) -> pd.DataFrame:
     return wide.reset_index()
 
 
+def hourly_grid(wide: pd.DataFrame) -> pd.DataFrame:
+    """เติมชั่วโมงที่หายไป เพื่อให้ lag N หมายถึง N ชั่วโมงจริง"""
+    if wide.empty:
+        return wide
+
+    value_columns = [column for column in wide.columns if column not in INDEX_COLS]
+    frames = []
+    for station_id, group in wide.groupby("station_id", sort=False):
+        hourly = group.set_index("timestamp")[value_columns].sort_index().asfreq("h").reset_index()
+        hourly["station_id"] = station_id
+        frames.append(hourly)
+
+    return pd.concat(frames, ignore_index=True).loc[:, [*INDEX_COLS, *value_columns]]
+
+
 def build_features(long: pd.DataFrame, *, horizon: int = 1) -> pd.DataFrame:
     """สร้างตารางฟีเจอร์ + คอลัมน์ target"""
-    out = to_wide(long)
+    out = hourly_grid(to_wide(long))
 
     # ⚠️ เรียงก่อนเสมอ — shift/rolling ทำงานตามลำดับแถว ไม่ได้อ่าน timestamp
     out = out.sort_values(INDEX_COLS).reset_index(drop=True)

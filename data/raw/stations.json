@@ -1,0 +1,1427 @@
+{
+  "generated_at": "2026-09-17T09:10:28+00:00",
+  "stations": [
+    {
+      "station_id": "oa:135:5077838",
+      "location_id": 135,
+      "sensor_id": 5077838,
+      "name": "Prabadang Rehabiltation Center",
+      "latitude": 13.664087,
+      "longitude": 100.543436,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:2088223:7684604",
+      "location_id": 2088223,
+      "sensor_id": 7684604,
+      "name": "Government House",
+      "latitude": 13.763911018899341,
+      "longitude": 100.51289004935268,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:2167:1304205",
+      "location_id": 2167,
+      "sensor_id": 1304205,
+      "name": "Highway District",
+      "latitude": 13.7054879,
+      "longitude": 100.315622,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225568:1304254",
+      "location_id": 225568,
+      "sensor_id": 1304254,
+      "name": "Bang Khen District Office, Bangkok",
+      "latitude": 13.873603,
+      "longitude": 100.595839,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225568:16312585",
+      "location_id": 225568,
+      "sensor_id": 16312585,
+      "name": "Bang Khen District Office, Bangkok",
+      "latitude": 13.873603,
+      "longitude": 100.595839,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225571:1304176",
+      "location_id": 225571,
+      "sensor_id": 1304176,
+      "name": "Bang Khun Thian District Office, Bangkok",
+      "latitude": 13.659908,
+      "longitude": 100.435902,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225571:16312586",
+      "location_id": 225571,
+      "sensor_id": 16312586,
+      "name": "Bang Khun Thian District Office, Bangkok",
+      "latitude": 13.659908,
+      "longitude": 100.435902,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225572:1304409",
+      "location_id": 225572,
+      "sensor_id": 1304409,
+      "name": "Kasertsart University",
+      "latitude": 13.839923,
+      "longitude": 100.575632,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225572:16312715",
+      "location_id": 225572,
+      "sensor_id": 16312715,
+      "name": "Kasertsart University",
+      "latitude": 13.839923,
+      "longitude": 100.575632,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225574:1304286",
+      "location_id": 225574,
+      "sensor_id": 1304286,
+      "name": "Phra Kanong District Office,  Bangkok",
+      "latitude": 13.691511,
+      "longitude": 100.61457,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225574:16312839",
+      "location_id": 225574,
+      "sensor_id": 16312839,
+      "name": "Phra Kanong District Office,  Bangkok",
+      "latitude": 13.691511,
+      "longitude": 100.61457,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225575:1304403",
+      "location_id": 225575,
+      "sensor_id": 1304403,
+      "name": "Bangkok Noi Train Police Station",
+      "latitude": 13.759619,
+      "longitude": 100.481137,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225575:16312589",
+      "location_id": 225575,
+      "sensor_id": 16312589,
+      "name": "Bangkok Noi Train Police Station",
+      "latitude": 13.759619,
+      "longitude": 100.481137,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225577:1304381",
+      "location_id": 225577,
+      "sensor_id": 1304381,
+      "name": "Bank of Ayuthaya Head Office Yan Nawa, Bangkok",
+      "latitude": 13.679226,
+      "longitude": 100.54687,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225577:16312593",
+      "location_id": 225577,
+      "sensor_id": 16312593,
+      "name": "Bank of Ayuthaya Head Office Yan Nawa, Bangkok",
+      "latitude": 13.679226,
+      "longitude": 100.54687,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225580:1304524",
+      "location_id": 225580,
+      "sensor_id": 1304524,
+      "name": "National Housing Authority Klongchan",
+      "latitude": 13.779873,
+      "longitude": 100.646009,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225580:16312782",
+      "location_id": 225580,
+      "sensor_id": 16312782,
+      "name": "National Housing Authority Klongchan",
+      "latitude": 13.779873,
+      "longitude": 100.646009,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225582:1304071",
+      "location_id": 225582,
+      "sensor_id": 1304071,
+      "name": "Khlong Toei District Office, Bangkok",
+      "latitude": 13.708488,
+      "longitude": 100.583747,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225582:16312721",
+      "location_id": 225582,
+      "sensor_id": 16312721,
+      "name": "Khlong Toei District Office, Bangkok",
+      "latitude": 13.708488,
+      "longitude": 100.583747,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225590:1304153",
+      "location_id": 225590,
+      "sensor_id": 1304153,
+      "name": "Sai Mai District Office, Bangkok",
+      "latitude": 13.896035,
+      "longitude": 100.660628,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225590:16312881",
+      "location_id": 225590,
+      "sensor_id": 16312881,
+      "name": "Sai Mai District Office, Bangkok",
+      "latitude": 13.896035,
+      "longitude": 100.660628,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225591:1304377",
+      "location_id": 225591,
+      "sensor_id": 1304377,
+      "name": "Ladphrao District Office, Bangkok",
+      "latitude": 13.803587,
+      "longitude": 100.607535,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225591:16312725",
+      "location_id": 225591,
+      "sensor_id": 16312725,
+      "name": "Ladphrao District Office, Bangkok",
+      "latitude": 13.803587,
+      "longitude": 100.607535,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225593:1304057",
+      "location_id": 225593,
+      "sensor_id": 1304057,
+      "name": "Big C Supercenter Bang Na",
+      "latitude": 13.667987,
+      "longitude": 100.635313,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225593:16312598",
+      "location_id": 225593,
+      "sensor_id": 16312598,
+      "name": "Big C Supercenter Bang Na",
+      "latitude": 13.667987,
+      "longitude": 100.635313,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225595:1304064",
+      "location_id": 225595,
+      "sensor_id": 1304064,
+      "name": "Bang Bon 5 Market",
+      "latitude": 13.639165,
+      "longitude": 100.372958,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225595:16312580",
+      "location_id": 225595,
+      "sensor_id": 16312580,
+      "name": "Bang Bon 5 Market",
+      "latitude": 13.639165,
+      "longitude": 100.372958,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225596:1304091",
+      "location_id": 225596,
+      "sensor_id": 1304091,
+      "name": "Sathon District Office, Bangkok",
+      "latitude": 13.707763,
+      "longitude": 100.526787,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225596:16312889",
+      "location_id": 225596,
+      "sensor_id": 16312889,
+      "name": "Sathon District Office, Bangkok",
+      "latitude": 13.707763,
+      "longitude": 100.526787,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225599:1304306",
+      "location_id": 225599,
+      "sensor_id": 1304306,
+      "name": "Bangrak Lovely Plaza",
+      "latitude": 13.726136,
+      "longitude": 100.528055,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225599:16312592",
+      "location_id": 225599,
+      "sensor_id": 16312592,
+      "name": "Bangrak Lovely Plaza",
+      "latitude": 13.726136,
+      "longitude": 100.528055,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225604:1304378",
+      "location_id": 225604,
+      "sensor_id": 1304378,
+      "name": "Seacon Square",
+      "latitude": 13.695561,
+      "longitude": 100.647615,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225604:16312891",
+      "location_id": 225604,
+      "sensor_id": 16312891,
+      "name": "Seacon Square",
+      "latitude": 13.695561,
+      "longitude": 100.647615,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225610:1304211",
+      "location_id": 225610,
+      "sensor_id": 1304211,
+      "name": "Bueng Kum District Office, Bangkok",
+      "latitude": 13.785212,
+      "longitude": 100.669183,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225610:16312602",
+      "location_id": 225610,
+      "sensor_id": 16312602,
+      "name": "Bueng Kum District Office, Bangkok",
+      "latitude": 13.785212,
+      "longitude": 100.669183,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225612:1304328",
+      "location_id": 225612,
+      "sensor_id": 1304328,
+      "name": "Bansomdejchaopraya Rajabhat University",
+      "latitude": 13.732846,
+      "longitude": 100.487662,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225614:1305020",
+      "location_id": 225614,
+      "sensor_id": 1305020,
+      "name": "Tha phra Intersection",
+      "latitude": 13.729431,
+      "longitude": 100.474373,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225614:16312924",
+      "location_id": 225614,
+      "sensor_id": 16312924,
+      "name": "Tha phra Intersection",
+      "latitude": 13.729431,
+      "longitude": 100.474373,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225617:1304343",
+      "location_id": 225617,
+      "sensor_id": 1304343,
+      "name": "Suan Luang District Office, Bangkok",
+      "latitude": 13.731051,
+      "longitude": 100.651705,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225617:16312911",
+      "location_id": 225617,
+      "sensor_id": 16312911,
+      "name": "Suan Luang District Office, Bangkok",
+      "latitude": 13.731051,
+      "longitude": 100.651705,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225619:1304237",
+      "location_id": 225619,
+      "sensor_id": 1304237,
+      "name": "Don Mueng District Office, Bangkok",
+      "latitude": 13.910986,
+      "longitude": 100.594877,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225619:16312666",
+      "location_id": 225619,
+      "sensor_id": 16312666,
+      "name": "Don Mueng District Office, Bangkok",
+      "latitude": 13.910986,
+      "longitude": 100.594877,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225621:1304323",
+      "location_id": 225621,
+      "sensor_id": 1304323,
+      "name": "Thon Buri Market Sanam Luang 2",
+      "latitude": 13.746257,
+      "longitude": 100.355099,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225621:16312938",
+      "location_id": 225621,
+      "sensor_id": 16312938,
+      "name": "Thon Buri Market Sanam Luang 2",
+      "latitude": 13.746257,
+      "longitude": 100.355099,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225622:1304203",
+      "location_id": 225622,
+      "sensor_id": 1304203,
+      "name": "Huai Khwang District Office, Bangkok",
+      "latitude": 13.77682,
+      "longitude": 100.579543,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225622:16312701",
+      "location_id": 225622,
+      "sensor_id": 16312701,
+      "name": "Huai Khwang District Office, Bangkok",
+      "latitude": 13.77682,
+      "longitude": 100.579543,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225624:1304435",
+      "location_id": 225624,
+      "sensor_id": 1304435,
+      "name": "Odeon Circus",
+      "latitude": 13.737136,
+      "longitude": 100.512734,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225624:16312811",
+      "location_id": 225624,
+      "sensor_id": 16312811,
+      "name": "Odeon Circus",
+      "latitude": 13.737136,
+      "longitude": 100.512734,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225629:1304077",
+      "location_id": 225629,
+      "sensor_id": 1304077,
+      "name": "Department of Disease Control",
+      "latitude": 13.852778,
+      "longitude": 100.529444,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225631:1304293",
+      "location_id": 225631,
+      "sensor_id": 1304293,
+      "name": "National Economic and Social Development Council Office",
+      "latitude": 13.756281,
+      "longitude": 100.514267,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225631:16312779",
+      "location_id": 225631,
+      "sensor_id": 16312779,
+      "name": "National Economic and Social Development Council Office",
+      "latitude": 13.756281,
+      "longitude": 100.514267,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225632:1304130",
+      "location_id": 225632,
+      "sensor_id": 1304130,
+      "name": "Chomthong District Office, Bangkok",
+      "latitude": 13.677757,
+      "longitude": 100.483861,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225632:16312649",
+      "location_id": 225632,
+      "sensor_id": 16312649,
+      "name": "Chomthong District Office, Bangkok",
+      "latitude": 13.677757,
+      "longitude": 100.483861,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225633:1304192",
+      "location_id": 225633,
+      "sensor_id": 1304192,
+      "name": "Siam University",
+      "latitude": 13.718689,
+      "longitude": 100.45391,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225633:16312893",
+      "location_id": 225633,
+      "sensor_id": 16312893,
+      "name": "Siam University",
+      "latitude": 13.718689,
+      "longitude": 100.45391,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225634:1304054",
+      "location_id": 225634,
+      "sensor_id": 1304054,
+      "name": "Rat Burana District Office,  Bangkok",
+      "latitude": 13.6821364,
+      "longitude": 100.5060513,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225634:16312864",
+      "location_id": 225634,
+      "sensor_id": 16312864,
+      "name": "Rat Burana District Office,  Bangkok",
+      "latitude": 13.6821364,
+      "longitude": 100.5060513,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225635:1304123",
+      "location_id": 225635,
+      "sensor_id": 1304123,
+      "name": "Wang Thonglang District Office, Bangkok",
+      "latitude": 13.778981,
+      "longitude": 100.622294,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225635:16312945",
+      "location_id": 225635,
+      "sensor_id": 16312945,
+      "name": "Wang Thonglang District Office, Bangkok",
+      "latitude": 13.778981,
+      "longitude": 100.622294,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225637:1304404",
+      "location_id": 225637,
+      "sensor_id": 1304404,
+      "name": "South Bangkok Power Plant",
+      "latitude": 13.618,
+      "longitude": 100.5562,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225638:1304216",
+      "location_id": 225638,
+      "sensor_id": 1304216,
+      "name": "Samyan Mitrtown",
+      "latitude": 13.733136,
+      "longitude": 100.52829,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225638:16312886",
+      "location_id": 225638,
+      "sensor_id": 16312886,
+      "name": "Samyan Mitrtown",
+      "latitude": 13.733136,
+      "longitude": 100.52829,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225640:1304353",
+      "location_id": 225640,
+      "sensor_id": 1304353,
+      "name": "Library under King Taksin Bridge",
+      "latitude": 13.719705,
+      "longitude": 100.508782,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225640:16312735",
+      "location_id": 225640,
+      "sensor_id": 16312735,
+      "name": "Library under King Taksin Bridge",
+      "latitude": 13.719705,
+      "longitude": 100.508782,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225641:1304357",
+      "location_id": 225641,
+      "sensor_id": 1304357,
+      "name": "Din Dang, Bangkok",
+      "latitude": 13.7619223,
+      "longitude": 100.558606,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225641:16312664",
+      "location_id": 225641,
+      "sensor_id": 16312664,
+      "name": "Din Dang, Bangkok",
+      "latitude": 13.7619223,
+      "longitude": 100.558606,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225642:1304146",
+      "location_id": 225642,
+      "sensor_id": 1304146,
+      "name": "Bang Phlat District Office, Bangkok",
+      "latitude": 13.793965,
+      "longitude": 100.504956,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225642:16312587",
+      "location_id": 225642,
+      "sensor_id": 16312587,
+      "name": "Bang Phlat District Office, Bangkok",
+      "latitude": 13.793965,
+      "longitude": 100.504956,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225647:1304340",
+      "location_id": 225647,
+      "sensor_id": 1304340,
+      "name": "Phra Nakhon District Office, Bangkok",
+      "latitude": 13.76415,
+      "longitude": 100.499077,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225650:1304152",
+      "location_id": 225650,
+      "sensor_id": 1304152,
+      "name": "The Government Public Relations Department",
+      "latitude": 13.783185,
+      "longitude": 100.540489,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225651:1304179",
+      "location_id": 225651,
+      "sensor_id": 1304179,
+      "name": "Saphan Sung District Office, Bangkok",
+      "latitude": 13.768892,
+      "longitude": 100.685743,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225651:16312888",
+      "location_id": 225651,
+      "sensor_id": 16312888,
+      "name": "Saphan Sung District Office, Bangkok",
+      "latitude": 13.768892,
+      "longitude": 100.685743,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225652:1304082",
+      "location_id": 225652,
+      "sensor_id": 1304082,
+      "name": "Public Park to commemorate the sixth anniversary of His Majesty the King",
+      "latitude": 13.697252,
+      "longitude": 100.497185,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225652:16312859",
+      "location_id": 225652,
+      "sensor_id": 16312859,
+      "name": "Public Park to commemorate the sixth anniversary of His Majesty the King",
+      "latitude": 13.697252,
+      "longitude": 100.497185,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225653:1304128",
+      "location_id": 225653,
+      "sensor_id": 1304128,
+      "name": "Chokchai Police Station",
+      "latitude": 13.7954248,
+      "longitude": 100.5930298,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225656:1304256",
+      "location_id": 225656,
+      "sensor_id": 1304256,
+      "name": "Bang Sue District Office, Bangkok",
+      "latitude": 13.809596,
+      "longitude": 100.537883,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225656:16312588",
+      "location_id": 225656,
+      "sensor_id": 16312588,
+      "name": "Bang Sue District Office, Bangkok",
+      "latitude": 13.809596,
+      "longitude": 100.537883,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225667:1304114",
+      "location_id": 225667,
+      "sensor_id": 1304114,
+      "name": "Mahaisawan Intersection",
+      "latitude": 13.70515,
+      "longitude": 100.48465,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225667:16312742",
+      "location_id": 225667,
+      "sensor_id": 16312742,
+      "name": "Mahaisawan Intersection",
+      "latitude": 13.70515,
+      "longitude": 100.48465,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225668:1304426",
+      "location_id": 225668,
+      "sensor_id": 1304426,
+      "name": "Bang Kapi District Office, Bangkok",
+      "latitude": 13.766478,
+      "longitude": 100.647785,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225668:16312581",
+      "location_id": 225668,
+      "sensor_id": 16312581,
+      "name": "Bang Kapi District Office, Bangkok",
+      "latitude": 13.766478,
+      "longitude": 100.647785,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225671:1304229",
+      "location_id": 225671,
+      "sensor_id": 1304229,
+      "name": "Khlong Sam Wa District Office, Bangkok",
+      "latitude": 13.859911,
+      "longitude": 100.704002,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225671:16312720",
+      "location_id": 225671,
+      "sensor_id": 16312720,
+      "name": "Khlong Sam Wa District Office, Bangkok",
+      "latitude": 13.859911,
+      "longitude": 100.704002,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225672:1304078",
+      "location_id": 225672,
+      "sensor_id": 1304078,
+      "name": "Suan Sayam-Ram Intra Intersection",
+      "latitude": 13.813844,
+      "longitude": 100.686594,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225672:16312914",
+      "location_id": 225672,
+      "sensor_id": 16312914,
+      "name": "Suan Sayam-Ram Intra Intersection",
+      "latitude": 13.813844,
+      "longitude": 100.686594,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225673:1304204",
+      "location_id": 225673,
+      "sensor_id": 1304204,
+      "name": "National Housing Authority Dindaeng",
+      "latitude": 13.762516670000002,
+      "longitude": 100.5502,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225673:16312781",
+      "location_id": 225673,
+      "sensor_id": 16312781,
+      "name": "National Housing Authority Dindaeng",
+      "latitude": 13.762516670000002,
+      "longitude": 100.5502,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225677:1304185",
+      "location_id": 225677,
+      "sensor_id": 1304185,
+      "name": "Lak Si District Office, Bangkok",
+      "latitude": 13.887395,
+      "longitude": 100.579247,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225677:16312727",
+      "location_id": 225677,
+      "sensor_id": 16312727,
+      "name": "Lak Si District Office, Bangkok",
+      "latitude": 13.887395,
+      "longitude": 100.579247,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225678:1304073",
+      "location_id": 225678,
+      "sensor_id": 1304073,
+      "name": "Bang Khae District Office, Bangkok",
+      "latitude": 13.696314,
+      "longitude": 100.409049,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225678:16312583",
+      "location_id": 225678,
+      "sensor_id": 16312583,
+      "name": "Bang Khae District Office, Bangkok",
+      "latitude": 13.696314,
+      "longitude": 100.409049,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225679:1304309",
+      "location_id": 225679,
+      "sensor_id": 1304309,
+      "name": "Dusit District Office, Bangkok",
+      "latitude": 13.776664,
+      "longitude": 100.520982,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225679:16312668",
+      "location_id": 225679,
+      "sensor_id": 16312668,
+      "name": "Dusit District Office, Bangkok",
+      "latitude": 13.776664,
+      "longitude": 100.520982,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225680:1304363",
+      "location_id": 225680,
+      "sensor_id": 1304363,
+      "name": "Sri Nakhon Khuean Khan Park",
+      "latitude": 13.696681,
+      "longitude": 100.563631,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225681:1304248",
+      "location_id": 225681,
+      "sensor_id": 1304248,
+      "name": "Soi Sukhumwit 63 Roadside Wattana, Bangkok",
+      "latitude": 13.722096,
+      "longitude": 100.584559,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225681:16312902",
+      "location_id": 225681,
+      "sensor_id": 16312902,
+      "name": "Soi Sukhumwit 63 Roadside Wattana, Bangkok",
+      "latitude": 13.722096,
+      "longitude": 100.584559,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225682:1304111",
+      "location_id": 225682,
+      "sensor_id": 1304111,
+      "name": "King Mongkut's University of Technology Thonburi",
+      "latitude": 13.651004,
+      "longitude": 100.496673,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225682:16312723",
+      "location_id": 225682,
+      "sensor_id": 16312723,
+      "name": "King Mongkut's University of Technology Thonburi",
+      "latitude": 13.651004,
+      "longitude": 100.496673,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225684:1304399",
+      "location_id": 225684,
+      "sensor_id": 1304399,
+      "name": "Army Apartment Sam Sen",
+      "latitude": 13.783554,
+      "longitude": 100.5344645,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225684:16312575",
+      "location_id": 225684,
+      "sensor_id": 16312575,
+      "name": "Army Apartment Sam Sen",
+      "latitude": 13.783554,
+      "longitude": 100.5344645,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225685:1304097",
+      "location_id": 225685,
+      "sensor_id": 1304097,
+      "name": "National Housing  Huaykwang",
+      "latitude": 13.77553,
+      "longitude": 100.569195,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225686:1304349",
+      "location_id": 225686,
+      "sensor_id": 1304349,
+      "name": "Highway NO.3902 km.13 +600",
+      "latitude": 13.636514,
+      "longitude": 100.414262,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225686:16312694",
+      "location_id": 225686,
+      "sensor_id": 16312694,
+      "name": "Highway NO.3902 km.13 +600",
+      "latitude": 13.636514,
+      "longitude": 100.414262,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225688:1304305",
+      "location_id": 225688,
+      "sensor_id": 1304305,
+      "name": "Ratchathewi District Office, Bangkok",
+      "latitude": 13.7590851,
+      "longitude": 100.5345788,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225688:16312866",
+      "location_id": 225688,
+      "sensor_id": 16312866,
+      "name": "Ratchathewi District Office, Bangkok",
+      "latitude": 13.7590851,
+      "longitude": 100.5345788,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225689:1304065",
+      "location_id": 225689,
+      "sensor_id": 1304065,
+      "name": "Phutthamonthon 1 - Borommaratchachonnani Intersection",
+      "latitude": 13.780778,
+      "longitude": 100.426727,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225689:16312843",
+      "location_id": 225689,
+      "sensor_id": 16312843,
+      "name": "Phutthamonthon 1 - Borommaratchachonnani Intersection",
+      "latitude": 13.780778,
+      "longitude": 100.426727,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225691:1304326",
+      "location_id": 225691,
+      "sensor_id": 1304326,
+      "name": "Ma Charean Roadside, Petcha Kasem 8, Nong Khaem",
+      "latitude": 13.705582,
+      "longitude": 100.343164,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:225691:16312738",
+      "location_id": 225691,
+      "sensor_id": 16312738,
+      "name": "Ma Charean Roadside, Petcha Kasem 8, Nong Khaem",
+      "latitude": 13.705582,
+      "longitude": 100.343164,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:229131:1320880",
+      "location_id": 229131,
+      "sensor_id": 1320880,
+      "name": "King Kaew Temple",
+      "latitude": 13.676111,
+      "longitude": 100.715,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:229190:1320292",
+      "location_id": 229190,
+      "sensor_id": 1320292,
+      "name": "Grand Monaco Village",
+      "latitude": 13.672332,
+      "longitude": 100.698602,
+      "provider": "AirNow"
+    },
+    {
+      "station_id": "oa:229191:1320288",
+      "location_id": 229191,
+      "sensor_id": 1320288,
+      "name": "Lalin Greenville Village",
+      "latitude": 13.702383,
+      "longitude": 100.698808,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:2326:1304072",
+      "location_id": 2326,
+      "sensor_id": 1304072,
+      "name": "Thai Meteorological Department",
+      "latitude": 13.666183,
+      "longitude": 100.605742,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:2352:5077771",
+      "location_id": 2352,
+      "sensor_id": 5077771,
+      "name": "Thonburi Power Sub-Station",
+      "latitude": 13.727622,
+      "longitude": 100.486568,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:2375:1304120",
+      "location_id": 2375,
+      "sensor_id": 1304120,
+      "name": "Bodindecha Sing Singhaseni School",
+      "latitude": 13.769634,
+      "longitude": 100.614567,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:2433:1304284",
+      "location_id": 2433,
+      "sensor_id": 1304284,
+      "name": "Nonsi Witthaya School",
+      "latitude": 13.70806667,
+      "longitude": 100.5473333,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368390:16312931",
+      "location_id": 368390,
+      "sensor_id": 16312931,
+      "name": "Thawee Wanarom Park",
+      "latitude": 13.7435329,
+      "longitude": 100.3526893,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368390:2076218",
+      "location_id": 368390,
+      "sensor_id": 2076218,
+      "name": "Thawee Wanarom Park",
+      "latitude": 13.7435329,
+      "longitude": 100.3526893,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368391:16312912",
+      "location_id": 368391,
+      "sensor_id": 16312912,
+      "name": "Suan Luang Rama IX",
+      "latitude": 13.6881393,
+      "longitude": 100.6579657,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368391:2076229",
+      "location_id": 368391,
+      "sensor_id": 2076229,
+      "name": "Suan Luang Rama IX",
+      "latitude": 13.6881393,
+      "longitude": 100.6579657,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368392:16312862",
+      "location_id": 368392,
+      "sensor_id": 16312862,
+      "name": "Ramintra Sports Park",
+      "latitude": 13.8778763,
+      "longitude": 100.6207085,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368392:2076223",
+      "location_id": 368392,
+      "sensor_id": 2076223,
+      "name": "Ramintra Sports Park",
+      "latitude": 13.8778763,
+      "longitude": 100.6207085,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368393:16312874",
+      "location_id": 368393,
+      "sensor_id": 16312874,
+      "name": "Rommani Thungsikan Park",
+      "latitude": 13.9288678,
+      "longitude": 100.5684666,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368393:2076221",
+      "location_id": 368393,
+      "sensor_id": 2076221,
+      "name": "Rommani Thungsikan Park",
+      "latitude": 13.9288678,
+      "longitude": 100.5684666,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368394:16312736",
+      "location_id": 368394,
+      "sensor_id": 16312736,
+      "name": "Lumpini park",
+      "latitude": 13.732225,
+      "longitude": 100.5448381,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368394:2076227",
+      "location_id": 368394,
+      "sensor_id": 2076227,
+      "name": "Lumpini park",
+      "latitude": 13.732225,
+      "longitude": 100.5448381,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368395:16312940",
+      "location_id": 368395,
+      "sensor_id": 16312940,
+      "name": "Thonburirom Park",
+      "latitude": 13.6502295,
+      "longitude": 100.4909771,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368395:2076215",
+      "location_id": 368395,
+      "sensor_id": 2076215,
+      "name": "Thonburirom Park",
+      "latitude": 13.6502295,
+      "longitude": 100.4909771,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368396:16312860",
+      "location_id": 368396,
+      "sensor_id": 16312860,
+      "name": "Queen Sirikit Park",
+      "latitude": 13.8055472,
+      "longitude": 100.5488338,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368396:2076225",
+      "location_id": 368396,
+      "sensor_id": 2076225,
+      "name": "Queen Sirikit Park",
+      "latitude": 13.8055472,
+      "longitude": 100.5488338,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368397:16312861",
+      "location_id": 368397,
+      "sensor_id": 16312861,
+      "name": "Rama VIII Park",
+      "latitude": 13.7693437,
+      "longitude": 100.4945337,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368397:2076216",
+      "location_id": 368397,
+      "sensor_id": 2076216,
+      "name": "Rama VIII Park",
+      "latitude": 13.7693437,
+      "longitude": 100.4945337,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368398:2076230",
+      "location_id": 368398,
+      "sensor_id": 2076230,
+      "name": "Santiphap Park",
+      "latitude": 13.7631081,
+      "longitude": 100.541407,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368399:16312596",
+      "location_id": 368399,
+      "sensor_id": 16312596,
+      "name": "Benjakitti Park",
+      "latitude": 13.7328791,
+      "longitude": 100.5600172,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368399:2076232",
+      "location_id": 368399,
+      "sensor_id": 2076232,
+      "name": "Benjakitti Park",
+      "latitude": 13.7328791,
+      "longitude": 100.5600172,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368400:2076219",
+      "location_id": 368400,
+      "sensor_id": 2076219,
+      "name": "Bang Kho Laem District Office, Bangkok (Mobile)",
+      "latitude": 13.69304,
+      "longitude": 100.50244,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368402:16312892",
+      "location_id": 368402,
+      "sensor_id": 16312892,
+      "name": "Serithai Park",
+      "latitude": 13.7855673,
+      "longitude": 100.6733359,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368402:2076231",
+      "location_id": 368402,
+      "sensor_id": 2076231,
+      "name": "Serithai Park",
+      "latitude": 13.7855673,
+      "longitude": 100.6733359,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368403:16312642",
+      "location_id": 368403,
+      "sensor_id": 16312642,
+      "name": "Chatuchak Park",
+      "latitude": 13.802546,
+      "longitude": 100.5509191,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368403:2076226",
+      "location_id": 368403,
+      "sensor_id": 2076226,
+      "name": "Chatuchak Park",
+      "latitude": 13.802546,
+      "longitude": 100.5509191,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368404:16312566",
+      "location_id": 368404,
+      "sensor_id": 16312566,
+      "name": "60th Anniversary of Queen Sirikit Park ,Kheha Romklao Road, Lat Krabang, Bangkok",
+      "latitude": 13.7631141,
+      "longitude": 100.7302101,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368404:2076214",
+      "location_id": 368404,
+      "sensor_id": 2076214,
+      "name": "60th Anniversary of Queen Sirikit Park ,Kheha Romklao Road, Lat Krabang, Bangkok",
+      "latitude": 13.7631141,
+      "longitude": 100.7302101,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368405:16312584",
+      "location_id": 368405,
+      "sensor_id": 16312584,
+      "name": "Bang Khae Phirom Park",
+      "latitude": 13.6863478,
+      "longitude": 100.3844036,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368405:2076222",
+      "location_id": 368405,
+      "sensor_id": 2076222,
+      "name": "Bang Khae Phirom Park",
+      "latitude": 13.6863478,
+      "longitude": 100.3844036,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368406:16312569",
+      "location_id": 368406,
+      "sensor_id": 16312569,
+      "name": "80th Anniversary Commemoration Park",
+      "latitude": 13.7716446,
+      "longitude": 100.4681128,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368406:2076224",
+      "location_id": 368406,
+      "sensor_id": 2076224,
+      "name": "80th Anniversary Commemoration Park",
+      "latitude": 13.7716446,
+      "longitude": 100.4681128,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368407:16312944",
+      "location_id": 368407,
+      "sensor_id": 16312944,
+      "name": "Wacchirabenchatat Park",
+      "latitude": 13.8118516,
+      "longitude": 100.5535825,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368407:2076220",
+      "location_id": 368407,
+      "sensor_id": 2076220,
+      "name": "Wacchirabenchatat Park",
+      "latitude": 13.8118516,
+      "longitude": 100.5535825,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368485:16312595",
+      "location_id": 368485,
+      "sensor_id": 16312595,
+      "name": "Benchasiri Park",
+      "latitude": 13.7304916,
+      "longitude": 100.5684634,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:368485:2076618",
+      "location_id": 368485,
+      "sensor_id": 2076618,
+      "name": "Benchasiri Park",
+      "latitude": 13.7304916,
+      "longitude": 100.5684634,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:418809:2332866",
+      "location_id": 418809,
+      "sensor_id": 2332866,
+      "name": "National Housing Authority Klongchan",
+      "latitude": 13.76121,
+      "longitude": 100.517035,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:418810:2332865",
+      "location_id": 418810,
+      "sensor_id": 2332865,
+      "name": "Southeast Asia University, Bangkok (Mobile)",
+      "latitude": 13.70735,
+      "longitude": 100.35391,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:418:1316996",
+      "location_id": 418,
+      "sensor_id": 1316996,
+      "name": "Department of Disease Control",
+      "latitude": 13.853457,
+      "longitude": 100.527132,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:5545:1304222",
+      "location_id": 5545,
+      "sensor_id": 1304222,
+      "name": "Chulalongkorn Hospital",
+      "latitude": 13.729852,
+      "longitude": 100.536501,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:6262229:15611068",
+      "location_id": 6262229,
+      "sensor_id": 15611068,
+      "name": "Public Park to commemorate the sixth anniversary of His Majesty the King",
+      "latitude": 13.685524189587932,
+      "longitude": 100.51830028147444,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:701:1304255",
+      "location_id": 701,
+      "sensor_id": 1304255,
+      "name": "Sukhothai Thammathirat Open University",
+      "latitude": 13.907861,
+      "longitude": 100.535641,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:906:1304207",
+      "location_id": 906,
+      "sensor_id": 1304207,
+      "name": "Residence for Dept. of Mineral Resources",
+      "latitude": 13.652141,
+      "longitude": 100.531805,
+      "provider": "Air4Thai"
+    },
+    {
+      "station_id": "oa:921162:5079767",
+      "location_id": 921162,
+      "sensor_id": 5079767,
+      "name": "Suan Sayam-Ram Intra Intersection",
+      "latitude": 13.799395,
+      "longitude": 100.682464,
+      "provider": "Air4Thai"
+    }
+  ]
+}

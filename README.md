@@ -1,40 +1,49 @@
 # ThaiAir
 
-พยากรณ์ PM2.5 ในกรุงเทพฯ ล่วงหน้า 24 ชั่วโมงจากข้อมูล OpenAQ ด้วย FastAPI
-และโมเดล `HistGradientBoostingRegressor`
+เว็บแผนที่ PM2.5 รอบกรุงเทพฯ 25 กิโลเมตร แสดงค่าตรวจวัดล่าสุดจาก OpenAQ และเลือกดู
+พยากรณ์ล่วงหน้าทุก 3 ชั่วโมงจนถึง 24 ชั่วโมงได้
 
-หน้าเว็บ: https://thaiair-api.onrender.com
+- Frontend: Next.js แบบ static export สำหรับ Vercel
+- API: FastAPI บน Render Free
+- Model: HistGradientBoostingRegressor; ช่วงที่โมเดลไม่ชนะ baseline จะใช้ค่าล่าสุดและแสดงป้ายกำกับตรง ๆ
+- Data: refresh OpenAQ เบื้องหลังทุกชั่วโมง และยังเปิดได้ด้วย snapshot เมื่อ upstream ล่มหรือไม่มี key
+
+## รันในเครื่อง
+
+API:
+
+```bash
+cp .env.example .env
+# ใส่ OPENAQ_API_KEY ใน .env หากต้องการข้อมูลสด
+docker build -f docker/Dockerfile.api -t thaiair-api .
+docker run --rm --env-file .env -p 8000:8000 thaiair-api
+```
+
+Frontend:
+
+```bash
+cd web
+npm install
+npm run dev
+```
+
+เปิด `http://localhost:3000` ส่วน API docs อยู่ที่ `http://localhost:8000/docs`
 
 ## API
 
-- `GET /health` ตรวจว่า process ทำงานอยู่
-- `GET /ready` ตรวจว่าโมเดลและข้อมูลพร้อมใช้งาน
-- `GET /stations` แสดงสถานีที่เลือกพยากรณ์ได้
-- `POST /predict` พยากรณ์จากสถานีและเวลาที่ระบุ
-- `GET /docs` ทดลอง API ผ่าน Swagger UI
+- `GET /health` — process ยังทำงาน
+- `GET /ready` — โมเดลและข้อมูลพร้อม
+- `GET /map-data` — สถานี พิกัด ค่าปัจจุบัน และทุกช่วงพยากรณ์สำหรับหน้าแผนที่
+- `GET /stations` — รายการ station ID
+- `POST /predict` — พยากรณ์สถานีเดียว โดยส่ง `horizon_hours` เป็น 3, 6, …, 24
 
-ตัวอย่าง:
+## Deploy โดยไม่ใช้ AWS
 
-```bash
-curl -X POST http://localhost:8000/predict \
-  -H 'Content-Type: application/json' \
-  -d '{"station_id":"oa:135:5077838"}'
-```
+1. เชื่อม repo นี้กับ Render Blueprint จาก `render.yaml` และใช้แผน Free
+2. ตั้ง secret `OPENAQ_API_KEY` ใน Render เพื่อเปิด hourly refresh
+3. สร้าง Vercel project โดยเลือก Root Directory เป็น `web`
+4. ตั้ง `NEXT_PUBLIC_API_URL=https://thaiair-api.onrender.com` ใน Vercel แล้ว deploy
+5. นำ URL ที่ Vercel ให้ไปตั้งใน Render เป็นทั้ง `WEB_APP_URL` และ `CORS_ORIGINS`
 
-## รันด้วย Docker
-
-```bash
-docker build -f docker/Dockerfile.api -t thaiair-api .
-docker run --rm -p 8000:8000 thaiair-api
-```
-
-Image พก production snapshot ของโมเดลและข้อมูลไปด้วย จึงไม่ต้องใช้ API key ตอนเสิร์ฟ
-ข้อมูลจะไม่อัปเดตจนกว่าจะสร้าง snapshot และ deploy ใหม่
-
-## Deploy
-
-`render.yaml` กำหนด Render Web Service แผน Free ใน Singapore ไว้แล้ว เชื่อม public
-GitHub repository เป็น Render Blueprint ได้โดยไม่ต้องตั้ง environment variable เพิ่ม
-
-Free service จะหลับเมื่อไม่มี traffic และคำขอแรกหลังตื่นอาจใช้เวลาประมาณหนึ่งนาที
-เพื่อป้องกันค่าใช้จ่าย อย่าเพิ่ม payment method หรือเปลี่ยน compute plan ออกจาก `free`
+เมื่อไม่มี traffic Render Free อาจพัก service ทำให้คำขอแรกช้าได้ ตัวหน้าเว็บจะแจ้งสถานะนี้ให้ผู้ใช้ทราบ
+ไม่ต้องใช้ Airflow หรือฐานข้อมูลสำหรับเวอร์ชันนี้
