@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: thaiair-api
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./docker/Dockerfile.api
+    dockerContext: .
+    healthCheckPath: /ready

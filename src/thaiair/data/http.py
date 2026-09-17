@@ -53,6 +53,7 @@ def get_json(
     url: str,
     params: dict[str, Any],
     *,
+    headers: dict[str, str] | None = None,
     client: httpx.Client | None = None,
 ) -> dict[str, Any]:
     """ยิง GET แล้วคืน JSON — ลองใหม่เมื่อเจอปัญหาชั่วคราว
@@ -68,7 +69,7 @@ def get_json(
 
         for attempt in range(MAX_ATTEMPTS):
             try:
-                response = client.get(url, params=params)
+                response = client.get(url, params=params, headers=headers)
 
                 if response.status_code in RETRYABLE_STATUS:
                     wait = _sleep_seconds(attempt, response.headers.get("Retry-After"))

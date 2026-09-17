@@ -82,9 +82,14 @@ def report_by_season(
     for season, group in sliced.groupby("season"):
         b = mae(group["y"].to_numpy(), group["baseline"].to_numpy())
         m = mae(group["y"].to_numpy(), group["model"].to_numpy())
+
+        # ถ้า baseline สมบูรณ์แบบ (b = 0) การเทียบเป็น % หารด้วยศูนย์
+        # mae() คืน Python float ไม่ใช่ numpy float → ZeroDivisionError ไม่ใช่ nan
+        delta = f"{(b - m) / b * 100:+5.1f}%" if b else "  n/a"
+
         print(
             f"  {season}  n={len(group):6,}   "
-            f"baseline={b:6.3f}   model={m:6.3f}   ดีขึ้น {(b - m) / b * 100:+5.1f}%"
+            f"baseline={b:6.3f}   model={m:6.3f}   ดีขึ้น {delta}"
         )
 
 
@@ -100,7 +105,7 @@ def feature_columns(frame: pd.DataFrame) -> list[str]:
 def main() -> None:
     parser = argparse.ArgumentParser(description="เทรนโมเดลแล้วเทียบกับ baseline")
     parser.add_argument("--raw", type=Path, default=DEFAULT_RAW)
-    parser.add_argument("--horizon", type=int, default=1)
+    parser.add_argument("--horizon", type=int, default=24)
     parser.add_argument("--test-fraction", type=float, default=0.2)
     parser.add_argument("--out", type=Path, default=artifact.DEFAULT_PATH)
     parser.add_argument("--no-save", action="store_true", help="เทรนเพื่อวัดผลอย่างเดียว ไม่บันทึก")
@@ -121,6 +126,22 @@ def main() -> None:
     frame = frame.dropna(subset=["target", "pm25"])
 
     train, test, cutoff = chronological_split(frame, args.test_fraction)
+
+    # 🔴 ด่านสำคัญ: ชุดว่างต้องหยุดที่นี่
+    #
+    # np.mean([]) คืน nan (แค่ warning ไม่ error) แล้ว improvement จะเป็น nan
+    # และ `nan < min_improvement` เป็น False เสมอ — โมเดลที่ไม่ได้ถูกวัดกับข้อมูล
+    # สักแถวจะพิมพ์ "ผ่าน" แล้วบันทึกทับตัวเก่า
+    #
+    # nan ทำให้ guardrail หลุดโดยไม่มีอะไรฟ้อง จึงต้องดักก่อนถึงจุดนั้น
+    if train.empty or test.empty:
+        print(
+            f"❌ แบ่งข้อมูลแล้วเหลือ train={len(train)} test={len(test)} — "
+            "ปรับ --test-fraction หรือเช็คว่าข้อมูลดิบมีพอไหม",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
     feature_cols = feature_columns(frame)
 
     y_test = test["target"].to_numpy()
@@ -128,6 +149,13 @@ def main() -> None:
     # ── baseline: ชั่วโมงหน้า = ชั่วโมงนี้ ────────────────────
     baseline_pred = test["pm25"].to_numpy()
     baseline_mae = mae(y_test, baseline_pred)
+
+    if baseline_mae == 0:
+        print(
+            "❌ baseline MAE = 0 — ข้อมูลทดสอบไม่มีการเปลี่ยนแปลงเลย เทียบเป็น % ไม่ได้",
+            file=sys.stderr,
+        )
+        sys.exit(1)
 
     # ── โมเดล ────────────────────────────────────────────────
     model = HistGradientBoostingRegressor(
@@ -141,8 +169,8 @@ def main() -> None:
 
     improvement = (baseline_mae - model_mae) / baseline_mae * 100
 
-    print(f"ช่วงเทรน   : {train.timestamp.min()} → {train.timestamp.max()}  ({len(train):,} แถว)")
-    print(f"ช่วงทดสอบ  : {test.timestamp.min()} → {test.timestamp.max()}  ({len(test):,} แถว)")
+    print(f"ช่วงเทรน   : {train['timestamp'].min()} → {train['timestamp'].max()}  ({len(train):,} แถว)")
+    print(f"ช่วงทดสอบ  : {test['timestamp'].min()} → {test['timestamp'].max()}  ({len(test):,} แถว)")
     print(f"จุดตัด     : {cutoff}")
     print(f"ฟีเจอร์    : {len(feature_cols)} คอลัมน์")
     print()
@@ -156,6 +184,7 @@ def main() -> None:
     print(f"ดีขึ้น {improvement:+.1f}%")
 
     report_by_season(test, y_test, baseline_pred, model_pred)
+
     if improvement < args.min_improvement:
         print(
             f"\n❌ ไม่ผ่าน — ต้องดีกว่า baseline อย่างน้อย {args.min_improvement:.1f}%",
@@ -174,7 +203,7 @@ def main() -> None:
             "feature_columns": feature_cols,
             "horizon": args.horizon,
             "trained_at": datetime.now(UTC).isoformat(timespec="seconds"),
-            "train_range": (str(train.timestamp.min()), str(train.timestamp.max())),
+            "train_range": (str(train["timestamp"].min()), str(train["timestamp"].max())),
             "metrics": {
                 "baseline_mae": baseline_mae,
                 "model_mae": model_mae,

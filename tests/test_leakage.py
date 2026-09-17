@@ -96,13 +96,14 @@ def test_stations_do_not_bleed_into_each_other():
         assert (values == 10.0).all(), f"{column} มีค่าจากสถานีอื่นปนมา"
 
 
-def test_target_is_exactly_the_next_value(walk):
-    """target ที่แถว t ต้องเท่ากับ pm25 ที่แถว t+1 ของสถานีเดียวกัน"""
-    features = build_features(walk, horizon=1)
+@pytest.mark.parametrize("horizon", [1, 24])
+def test_target_is_exactly_the_horizon_value(walk, horizon):
+    """target ที่แถว t ต้องเท่ากับ pm25 ที่แถว t+horizon ของสถานีเดียวกัน"""
+    features = build_features(walk, horizon=horizon)
     s1 = features[features["station_id"] == "s1"].reset_index(drop=True)
 
-    expected = s1["pm25"].iloc[1:].reset_index(drop=True)
-    actual = s1["target"].iloc[:-1].reset_index(drop=True)
+    expected = s1["pm25"].iloc[horizon:].reset_index(drop=True)
+    actual = s1["target"].iloc[:-horizon].reset_index(drop=True)
 
     pd.testing.assert_series_equal(actual, expected, check_names=False)
 

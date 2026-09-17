@@ -72,7 +72,7 @@ Protocol ยังทำให้แหล่งที่ไม่ได้ impo
 ## กรอบของปัญหา: ฟีเจอร์ที่แถว t ใช้ข้อมูลถึง t ได้ · เป้าหมายคือ t + horizon
 ผลที่ตามมา: rolling ที่รวมค่า ณ t เข้าไปด้วย "ถูกต้อง" ไม่ใช่ leakage
 เพราะตอนพยากรณ์เรารู้ค่าปัจจุบันอยู่แล้ว
-horizon เป็นพารามิเตอร์ เริ่มที่ 1 — ตอนทำแอปจะเปลี่ยนเป็น 24 ได้ทันที
+horizon เป็นพารามิเตอร์ โดยคำสั่งเทรนใช้ค่าเริ่มต้น 24 ชั่วโมง
 
 ## groupby station_id ก่อน shift/rolling ทุกครั้ง + sort ก่อน groupby
 เลือกเพราะ: shift/rolling ทำงานตามลำดับแถว ไม่ได้อ่าน timestamp
@@ -152,3 +152,9 @@ sys.exit(1) อยู่ก่อนบรรทัดบันทึก → โ
 
 ## ⚠️ หนี้: API โหลดประวัติตอนสตาร์ตแล้วไม่รีเฟรช
 ข้อมูลใหม่ต้อง restart — นี่คือปัญหาที่ feature store กับ orchestration เกิดมาเพื่อแก้
+
+## Deploy บน Render Free ด้วย snapshot คงที่
+ทางเลือกอื่น: AWS ECS, scheduler ดึงข้อมูลรายวัน, database
+เลือกเพราะ: portfolio ต้องมี public API โดยไม่เสียค่า hosting
+image พกเฉพาะ model และ observations snapshot ที่ใช้เสิร์ฟ จึงไม่ต้อง database
+หรือ OpenAQ API key บน Render · ยอมรับ cold start และอัปเดต snapshot ด้วยมือ

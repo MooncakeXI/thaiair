@@ -2,9 +2,6 @@
 .venv/
 venv/
 
-# ข้อมูลกับโมเดลไม่เข้า image — เดี๋ยว mount เข้าไปตอนรัน
-data/
-models/
 mlruns/
 
 __pycache__/

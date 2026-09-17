@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import json
+import os
 import pkgutil
 from pathlib import Path
 
@@ -16,7 +17,7 @@ import pytest
 
 import thaiair.data.sources as sources_pkg
 from thaiair.data.schema import KEY, PARAMETERS, SCHEMA
-from thaiair.data.sources import SOURCES, openmeteo
+from thaiair.data.sources import SOURCES, openaq, openmeteo
 
 FIXTURES = Path(__file__).parent / "fixtures"
 # ชื่อโมดูลที่ไม่นับเป็นแหล่งข้อมูล
@@ -100,8 +101,25 @@ def _openmeteo_offline() -> dict:
     return {"client": _canned_client(payload)}
 
 
+def _openaq_offline() -> dict:
+    payload = json.loads((FIXTURES / "openaq.json").read_text())
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        if request.url.path.endswith("/locations"):
+            return httpx.Response(200, json=payload["locations"])
+        page = request.url.params.get("page", "1")
+        return httpx.Response(200, json={"results": payload["hours"].get(page, [])})
+
+    return {
+        "api_key": "test-key",
+        "client": httpx.Client(transport=httpx.MockTransport(handler)),
+        "end": "2026-08-02T00:00:00Z",
+    }
+
+
 # แหล่งที่ต้องใช้เน็ต → ต้องมีวิธีทำให้ทำงานแบบออฟไลน์
 OFFLINE_KWARGS = {
+    "openaq": _openaq_offline,
     "openmeteo": _openmeteo_offline,
 }
 
@@ -127,6 +145,64 @@ def test_openmeteo_never_sends_timezone_param():
         assert "timezone" not in params, f"เผลอส่ง timezone ไป: {params}"
 
 
+def test_openaq_sends_key_and_paginates(monkeypatch):
+    payload = json.loads((FIXTURES / "openaq.json").read_text())
+    seen: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen.append(request)
+        if request.url.path.endswith("/locations"):
+            return httpx.Response(200, json=payload["locations"])
+        page = request.url.params.get("page", "1")
+        return httpx.Response(200, json={"results": payload["hours"].get(page, [])})
+
+    monkeypatch.setattr(openaq, "PAGE_SIZE", 2)
+    with httpx.Client(transport=httpx.MockTransport(handler)) as client:
+        frame = openaq.fetch(
+            days=1,
+            api_key="secret",
+            end="2026-08-02T00:00:00Z",
+            client=client,
+        )
+
+    assert len(frame) == 3
+    assert all(request.headers["X-API-Key"] == "secret" for request in seen)
+    hour_requests = [request for request in seen if request.url.path.endswith("/hours")]
+    assert [request.url.params["page"] for request in hour_requests] == ["1", "2"]
+    assert all("datetime_from" in request.url.params for request in hour_requests)
+
+
+def test_openaq_skips_a_broken_sensor(monkeypatch):
+    payload = json.loads((FIXTURES / "openaq.json").read_text())
+    payload["locations"]["results"][0]["sensors"].append(
+        {"id": 4203, "parameter": {"id": 2, "name": "pm25", "units": "µg/m³"}}
+    )
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        if request.url.path.endswith("/locations"):
+            return httpx.Response(200, json=payload["locations"])
+        if "/4202/" in request.url.path:
+            return httpx.Response(500)
+        return httpx.Response(200, json={"results": payload["hours"]["1"]})
+
+    monkeypatch.setattr("thaiair.data.http.time.sleep", lambda _: None)
+    with httpx.Client(transport=httpx.MockTransport(handler)) as client:
+        frame = openaq.fetch(
+            days=1,
+            api_key="secret",
+            end="2026-08-02T00:00:00Z",
+            client=client,
+        )
+
+    assert set(frame["station_id"]) == {"oa:42:4203"}
+
+
+def test_openaq_requires_api_key(monkeypatch):
+    monkeypatch.delenv("OPENAQ_API_KEY", raising=False)
+    with pytest.raises(ValueError, match="OPENAQ_API_KEY"):
+        openaq.fetch()
+
+
 @pytest.mark.live
 def test_openmeteo_live_still_matches_our_parser():
     """ยิง API จริงเพื่อดูว่าเขายังไม่เปลี่ยนรูปแบบ
@@ -135,5 +211,15 @@ def test_openmeteo_live_still_matches_our_parser():
     รันสัปดาห์ละครั้งก็พอ วันที่มันแดงคือวันที่ Open-Meteo เปลี่ยน API
     """
     df = openmeteo.fetch(days=1, locations=["bangkok"])
+    assert len(df) > 0
+    assert set(df.columns) == set(SCHEMA)
+
+
+@pytest.mark.live
+def test_openaq_live_still_matches_our_parser():
+    api_key = os.getenv("OPENAQ_API_KEY")
+    if not api_key:
+        pytest.skip("ต้องตั้ง OPENAQ_API_KEY ก่อนรัน live test")
+    df = openaq.fetch(days=1, api_key=api_key)
     assert len(df) > 0
     assert set(df.columns) == set(SCHEMA)

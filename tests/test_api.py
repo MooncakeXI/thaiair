@@ -12,7 +12,7 @@ from thaiair.features.build import build_features
 from thaiair.models import artifact
 from thaiair.models.train import feature_columns
 
-HORIZON = 1
+HORIZON = 24
 STATION = "bkk-01"
 
 
