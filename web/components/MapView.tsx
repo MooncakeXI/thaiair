@@ -1,9 +1,9 @@
 "use client";
 
+import {Fragment, useEffect} from "react";
 import {CircleMarker, MapContainer, TileLayer, Tooltip, useMap} from "react-leaflet";
 import type {Station} from "@/lib/types";
 import {readingFor} from "@/lib/readings";
-import {useEffect} from "react";
 
 const BANGKOK: [number, number] = [13.7563, 100.5018];
 
@@ -32,24 +32,31 @@ export function MapView({stations, horizon, selectedId, onSelect}: {
         const reading = readingFor(station, horizon);
         const selectedMarker = station.station_id === selectedId;
         return (
-          <CircleMarker
-            key={station.station_id}
-            center={[station.latitude, station.longitude]}
-            radius={selectedMarker ? 12 : 9}
-            pathOptions={{
-              color: selectedMarker ? "#102b2a" : "#fffdf8",
-              fillColor: reading.color,
-              fillOpacity: .94,
-              opacity: 1,
-              weight: selectedMarker ? 4 : 2,
-            }}
-            eventHandlers={{click: () => onSelect(station.station_id)}}
-          >
-            <Tooltip direction="top" offset={[0, -8]}>
-              <strong>{station.name}</strong><br />
-              {reading.pm25 === null ? "ข้อมูลไม่พอ" : `${reading.pm25} µg/m³ · ${reading.level}`}
-            </Tooltip>
-          </CircleMarker>
+          <Fragment key={station.station_id}>
+            <CircleMarker
+              center={[station.latitude, station.longitude]}
+              radius={selectedMarker ? 14 : 10}
+              pathOptions={{color: "#fffdf8", fillOpacity: 0, opacity: .96, weight: selectedMarker ? 6 : 4}}
+              interactive={false}
+            />
+            <CircleMarker
+              center={[station.latitude, station.longitude]}
+              radius={selectedMarker ? 9 : 6}
+              pathOptions={{
+                color: selectedMarker ? "#102b2a" : "#284744",
+                fillColor: reading.color,
+                fillOpacity: 1,
+                opacity: 1,
+                weight: selectedMarker ? 3 : 2,
+              }}
+              eventHandlers={{click: () => onSelect(station.station_id)}}
+            >
+              <Tooltip direction="top" offset={[0, -10]}>
+                <strong>{station.name}</strong><br />
+                {reading.pm25 === null ? "ข้อมูลไม่พอ" : `${reading.pm25} µg/m³ · ${reading.level}`}
+              </Tooltip>
+            </CircleMarker>
+          </Fragment>
         );
       })}
       <Focus station={selected} />

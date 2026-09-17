@@ -15,7 +15,7 @@ const station = {
 };
 
 test("เลือกเวลาพยากรณ์และเห็นค่าของสถานี", async ({page}) => {
-  await page.route("http://localhost:8000/map-data", (route) => route.fulfill({
+  await page.route("**/map-data", (route) => route.fulfill({
     contentType: "application/json",
     body: JSON.stringify({
       generated_at: "2026-09-17T03:05:00Z",
@@ -26,13 +26,27 @@ test("เลือกเวลาพยากรณ์และเห็นค�
       stations: [station],
     }),
   }));
+  await page.route("https://api.open-meteo.com/v1/forecast?*", (route) => route.fulfill({
+    contentType: "application/json",
+    body: JSON.stringify({
+      hourly: {
+        time: ["2026-09-17T03:00", "2026-09-17T06:00"],
+        temperature_2m: [30, 31],
+        apparent_temperature: [34, 35],
+        precipitation_probability: [20, 70],
+        weather_code: [1, 80],
+      },
+    }),
+  }));
   await page.route("https://tile.openstreetmap.org/**", (route) => route.abort());
 
   await page.goto("/");
   await expect(page.getByRole("heading", {name: /วันนี้ถึงพรุ่งนี้/})).toBeVisible();
   await expect(page.getByRole("heading", {name: station.name})).toBeVisible();
-  await page.getByLabel("เลือกช่วงเวลาพยากรณ์").fill("1");
+  await page.getByRole("button", {name: "+3", exact: true}).click();
   await expect(page.getByText("อีก 3 ชั่วโมง")).toBeVisible();
   await expect(page.getByText("21", {exact: true})).toBeVisible();
+  await expect(page.locator(".weather-grid strong").nth(0)).toContainText("31");
+  await expect(page.locator(".weather-grid strong").nth(2)).toContainText("70");
   await expect(page.getByText("ใช้ค่าล่าสุด (baseline)")).toBeVisible();
 });
