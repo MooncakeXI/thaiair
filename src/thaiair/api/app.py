@@ -14,6 +14,7 @@ from typing import Any
 
 import pandas as pd
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
 from thaiair.features.build import build_features
@@ -43,6 +44,7 @@ class _State:
 
 
 state = _State()
+INDEX_PATH = Path(__file__).with_name("index.html")
 
 
 @asynccontextmanager
@@ -91,6 +93,11 @@ class PredictResponse(BaseModel):
     model_trained_at: str
 
 
+@app.get("/", include_in_schema=False)
+def home() -> FileResponse:
+    return FileResponse(INDEX_PATH, media_type="text/html")
+
+
 @app.get("/health")
 def health() -> dict[str, str]:
     """process ยังอยู่ไหม — ไม่สนว่าเสิร์ฟได้หรือเปล่า
@@ -117,6 +124,13 @@ def ready() -> dict[str, Any]:
         "horizon_hours": state.artifact["horizon"],
         "history_rows": len(state.features),
     }
+
+
+@app.get("/stations")
+def stations() -> dict[str, list[str]]:
+    if not state.ready:
+        raise HTTPException(status_code=503, detail="ยังโหลดโมเดลไม่สำเร็จ")
+    return {"stations": sorted(state.features["station_id"].unique())}
 
 
 @app.post("/predict", response_model=PredictResponse)

@@ -3,10 +3,13 @@
 พยากรณ์ PM2.5 ในกรุงเทพฯ ล่วงหน้า 24 ชั่วโมงจากข้อมูล OpenAQ ด้วย FastAPI
 และโมเดล `HistGradientBoostingRegressor`
 
+หน้าเว็บ: https://thaiair-api.onrender.com
+
 ## API
 
 - `GET /health` ตรวจว่า process ทำงานอยู่
 - `GET /ready` ตรวจว่าโมเดลและข้อมูลพร้อมใช้งาน
+- `GET /stations` แสดงสถานีที่เลือกพยากรณ์ได้
 - `POST /predict` พยากรณ์จากสถานีและเวลาที่ระบุ
 - `GET /docs` ทดลอง API ผ่าน Swagger UI
 

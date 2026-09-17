@@ -25,6 +25,8 @@ jobs:
             test "$attempt" -lt 30 || { docker logs thaiair-api; exit 1; }
             sleep 1
           done
+          curl -fsS http://localhost:8000/ | grep -q ThaiAir
+          curl -fsS http://localhost:8000/stations | grep -q 'oa:135:5077838'
           curl -fsS -X POST http://localhost:8000/predict \
             -H 'Content-Type: application/json' \
             -d '{"station_id":"oa:135:5077838"}'

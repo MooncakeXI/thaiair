@@ -76,6 +76,19 @@ def test_ready_reports_model_metadata(client):
     assert body["horizon_hours"] == HORIZON
 
 
+def test_home_serves_frontend(client):
+    response = client.get("/")
+    assert response.status_code == 200
+    assert "ThaiAir" in response.text
+    assert response.headers["content-type"].startswith("text/html")
+
+
+def test_stations_are_sorted(client):
+    stations = client.get("/stations").json()["stations"]
+    assert stations == sorted(stations)
+    assert STATION in stations
+
+
 def test_predict_returns_a_number_for_the_right_time(client):
     body = client.post("/predict", json={"station_id": STATION}).json()
 

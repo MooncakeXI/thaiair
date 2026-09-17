@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102b2a">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self'">
+  <title>ThaiAir — พยากรณ์ฝุ่น PM2.5</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #102b2a;
+      --muted: #667876;
+      --paper: #f4f0e7;
+      --card: #fffdf8;
+      --line: #d9d6cc;
+      --accent: #ff6846;
+      --shadow: 0 20px 60px rgba(16, 43, 42, .12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 8% 8%, rgba(255, 183, 77, .2), transparent 28rem),
+        radial-gradient(circle at 92% 92%, rgba(37, 150, 140, .16), transparent 28rem),
+        var(--paper);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .shell { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 0;
+    }
+
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 850; letter-spacing: -.04em; font-size: 1.35rem; }
+    .brand-mark { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; background: var(--ink); color: var(--paper); }
+    .status { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: .84rem; }
+    .status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #25a879; box-shadow: 0 0 0 4px rgba(37, 168, 121, .13); }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(390px, 1.1fr);
+      align-items: center;
+      gap: clamp(40px, 7vw, 96px);
+      min-height: calc(100vh - 154px);
+      padding: 44px 0 80px;
+    }
+
+    .eyebrow { margin: 0 0 18px; color: var(--accent); font-size: .78rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+    h1 { margin: 0; max-width: 660px; font-size: clamp(3rem, 7vw, 6.4rem); line-height: .93; letter-spacing: -.075em; }
+    .lead { max-width: 520px; margin: 28px 0 34px; color: var(--muted); font-size: clamp(1rem, 2vw, 1.15rem); line-height: 1.75; }
+
+    form { display: flex; gap: 10px; max-width: 550px; }
+    label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
+    select, button { min-height: 50px; border-radius: 14px; font: inherit; }
+    select { flex: 1; min-width: 0; border: 1px solid var(--line); padding: 0 16px; color: var(--ink); background: var(--card); }
+    button { border: 0; padding: 0 22px; color: white; background: var(--ink); font-weight: 750; cursor: pointer; transition: transform .18s ease, opacity .18s ease; }
+    button:hover { transform: translateY(-2px); }
+    button:disabled { cursor: wait; opacity: .6; transform: none; }
+    select:focus-visible, button:focus-visible { outline: 3px solid rgba(255, 104, 70, .35); outline-offset: 2px; }
+
+    .forecast {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(26px, 5vw, 48px);
+      border: 1px solid rgba(16, 43, 42, .1);
+      border-radius: 34px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+    .forecast::after { content: ""; position: absolute; width: 170px; height: 170px; right: -70px; top: -75px; border-radius: 50%; background: var(--tone, #67c6a3); opacity: .18; }
+    .card-label { margin: 0 0 20px; color: var(--muted); font-size: .85rem; font-weight: 700; letter-spacing: .08em; }
+    .reading { display: flex; align-items: flex-end; gap: 10px; }
+    .value { font-size: clamp(5rem, 13vw, 8rem); font-weight: 900; line-height: .82; letter-spacing: -.08em; font-variant-numeric: tabular-nums; }
+    .unit { padding-bottom: 9px; color: var(--muted); line-height: 1.25; }
+    .category { display: inline-flex; align-items: center; gap: 8px; margin: 26px 0 30px; padding: 9px 13px; border-radius: 999px; background: color-mix(in srgb, var(--tone, #67c6a3) 18%, white); font-weight: 750; }
+    .category::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--tone, #67c6a3); }
+
+    .scale { position: relative; display: grid; grid-template-columns: 15fr 10fr 12.5fr 37.5fr 25fr; gap: 3px; height: 8px; margin-bottom: 32px; }
+    .scale span { background: var(--bar); }
+    .scale span:first-child { border-radius: 999px 0 0 999px; }
+    .scale span:last-child { border-radius: 0 999px 999px 0; }
+    .marker { position: absolute; left: var(--marker, 0%); top: 50%; width: 3px; height: 20px; border-radius: 3px; background: var(--ink); transform: translate(-50%, -50%); transition: left .5s ease; }
+
+    .details { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; padding-top: 24px; border-top: 1px solid var(--line); }
+    .detail span { display: block; color: var(--muted); font-size: .78rem; margin-bottom: 5px; }
+    .detail strong { font-size: .94rem; line-height: 1.45; }
+    .note { margin: 22px 0 0; color: var(--muted); font-size: .76rem; line-height: 1.55; }
+    .error { color: #a52d2d; }
+
+    footer { padding: 0 0 28px; color: var(--muted); font-size: .75rem; }
+    footer a { color: inherit; text-underline-offset: 3px; }
+
+    @media (max-width: 800px) {
+      main { grid-template-columns: 1fr; min-height: auto; padding-top: 36px; }
+      .intro { text-align: center; }
+      .lead, form { margin-left: auto; margin-right: auto; }
+      .forecast { max-width: 560px; width: 100%; margin: 0 auto; text-align: left; }
+    }
+
+    @media (max-width: 480px) {
+      .shell { width: min(100% - 22px, 1120px); }
+      header { padding: 20px 4px; }
+      main { gap: 34px; padding: 28px 0 56px; }
+      h1 { font-size: 3.45rem; }
+      form { flex-direction: column; }
+      button { width: 100%; }
+      .forecast { border-radius: 26px; }
+      .details { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="brand"><span class="brand-mark" aria-hidden="true">อ</span>ThaiAir</div>
+      <div class="status">โมเดลพร้อมใช้งาน</div>
+    </header>
+
+    <main>
+      <section class="intro">
+        <p class="eyebrow">Bangkok · 24-hour forecast</p>
+        <h1>พรุ่งนี้<br>อากาศเป็นไง?</h1>
+        <p class="lead">ดูค่าฝุ่น PM2.5 ที่โมเดลคาดการณ์ล่วงหน้า 24 ชั่วโมง จากข้อมูลตรวจวัดของ OpenAQ</p>
+        <form id="forecast-form">
+          <label for="station">เลือกสถานีตรวจวัด</label>
+          <select id="station" name="station" aria-label="เลือกสถานีตรวจวัด" disabled>
+            <option>กำลังโหลดสถานี…</option>
+          </select>
+          <button id="submit" type="submit" disabled>ดูพยากรณ์</button>
+        </form>
+      </section>
+
+      <section class="forecast" id="forecast" aria-live="polite" aria-busy="true">
+        <p class="card-label">PM2.5 ที่คาดการณ์</p>
+        <div class="reading">
+          <strong class="value" id="value">—</strong>
+          <span class="unit">µg/m³<br>อีก 24 ชม.</span>
+        </div>
+        <div class="category" id="category">กำลังเตรียมข้อมูล</div>
+        <div class="scale" aria-hidden="true">
+          <span style="--bar:#58bcd5"></span><span style="--bar:#67c6a3"></span><span style="--bar:#f3d451"></span><span style="--bar:#f39b4a"></span><span style="--bar:#e46666"></span>
+          <i class="marker"></i>
+        </div>
+        <div class="details">
+          <div class="detail"><span>อ้างอิงข้อมูลเวลา</span><strong id="based-on">—</strong></div>
+          <div class="detail"><span>พยากรณ์สำหรับเวลา</span><strong id="predicted-for">—</strong></div>
+        </div>
+        <p class="note" id="note">ค่าจากแบบจำลองเพื่อการศึกษา ไม่ใช่ค่าตรวจวัดแบบเรียลไทม์</p>
+      </section>
+    </main>
+
+    <footer>ข้อมูลจาก OpenAQ · <a href="/docs">API Documentation</a></footer>
+  </div>
+
+  <script>
+    const form = document.querySelector('#forecast-form');
+    const select = document.querySelector('#station');
+    const submit = document.querySelector('#submit');
+    const card = document.querySelector('#forecast');
+    const value = document.querySelector('#value');
+    const category = document.querySelector('#category');
+    const basedOn = document.querySelector('#based-on');
+    const predictedFor = document.querySelector('#predicted-for');
+    const note = document.querySelector('#note');
+
+    const levels = [
+      [15, 'ดีมาก', '#58bcd5'],
+      [25, 'ดี', '#67c6a3'],
+      [37.5, 'ปานกลาง', '#f3d451'],
+      [75, 'เริ่มมีผลกระทบต่อสุขภาพ', '#f39b4a'],
+      [Infinity, 'มีผลกระทบต่อสุขภาพ', '#e46666']
+    ];
+
+    function utcDate(raw) {
+      return new Date(/[zZ]|[+-]\d\d:\d\d$/.test(raw) ? raw : `${raw}Z`);
+    }
+
+    function thaiTime(raw) {
+      return new Intl.DateTimeFormat('th-TH', {
+        dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Bangkok'
+      }).format(utcDate(raw)) + ' น.';
+    }
+
+    function stationLabel(id) {
+      const parts = id.split(':');
+      return parts.length === 3 ? `สถานี ${parts[1]} · เซ็นเซอร์ ${parts[2]}` : id;
+    }
+
+    function showForecast(data) {
+      const level = levels.find(([limit]) => data.pm25 <= limit);
+      value.textContent = data.pm25.toLocaleString('th-TH', { maximumFractionDigits: 2 });
+      category.textContent = level[1];
+      basedOn.textContent = thaiTime(data.based_on);
+      predictedFor.textContent = thaiTime(data.predicted_for);
+      note.textContent = `โมเดลเทรนล่าสุด ${thaiTime(data.model_trained_at)} · ค่าพยากรณ์เพื่อการศึกษา`;
+      card.style.setProperty('--tone', level[2]);
+      card.style.setProperty('--marker', `${Math.min(Math.max(data.pm25, 0), 100)}%`);
+    }
+
+    async function predict() {
+      submit.disabled = true;
+      submit.textContent = 'กำลังคำนวณ…';
+      card.setAttribute('aria-busy', 'true');
+      try {
+        const response = await fetch('/predict', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({station_id: select.value})
+        });
+        if (!response.ok) throw new Error('ไม่สามารถโหลดค่าพยากรณ์ได้');
+        showForecast(await response.json());
+      } catch (error) {
+        category.textContent = 'โหลดข้อมูลไม่สำเร็จ';
+        note.textContent = error.message;
+        note.classList.add('error');
+      } finally {
+        submit.disabled = false;
+        submit.textContent = 'ดูพยากรณ์';
+        card.setAttribute('aria-busy', 'false');
+      }
+    }
+
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      predict();
+    });
+
+    async function start() {
+      try {
+        const response = await fetch('/stations');
+        if (!response.ok) throw new Error('ไม่สามารถโหลดรายชื่อสถานีได้');
+        const {stations} = await response.json();
+        select.replaceChildren(...stations.map(id => {
+          const option = document.createElement('option');
+          option.value = id;
+          option.textContent = stationLabel(id);
+          return option;
+        }));
+        select.value = stations.includes('oa:135:5077838') ? 'oa:135:5077838' : stations[0];
+        select.disabled = false;
+        submit.disabled = false;
+        await predict();
+      } catch (error) {
+        category.textContent = 'ระบบยังไม่พร้อม';
+        note.textContent = error.message;
+        note.classList.add('error');
+        card.setAttribute('aria-busy', 'false');
+      }
+    }
+
+    start();
+  </script>
+</body>
+</html>
