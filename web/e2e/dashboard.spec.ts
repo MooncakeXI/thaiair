@@ -22,7 +22,7 @@ test("เลือกเวลาพยากรณ์และเห็นค�
       source_status: "live",
       refreshed_at: "2026-09-17T03:00:00Z",
       refreshing: false,
-      available_horizons: [0, 3],
+      available_horizons: [3],
       stations: [station],
     }),
   }));
@@ -43,6 +43,7 @@ test("เลือกเวลาพยากรณ์และเห็นค�
   await page.goto("/");
   await expect(page.getByRole("heading", {name: /วันนี้ถึงพรุ่งนี้/})).toBeVisible();
   await expect(page.getByRole("heading", {name: station.name})).toBeVisible();
+  await expect(page.locator(".time-control strong")).toContainText("10:00");
   await page.getByLabel("เลือกเวลาพยากรณ์").fill("1");
   await expect(page.locator(".time-control strong")).toContainText("13:00");
   await expect(page.getByText("21", {exact: true})).toBeVisible();

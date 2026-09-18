@@ -45,7 +45,9 @@ export function Dashboard() {
     };
   }, [load]);
 
-  const horizons = data?.available_horizons ?? [0, 3, 6, 9, 12, 15, 18, 21, 24];
+  const horizons = data
+    ? [0, ...data.available_horizons.filter((hours) => hours !== 0)]
+    : [0, 3, 6, 9, 12, 15, 18, 21, 24];
   const safeIndex = Math.min(horizonIndex, horizons.length - 1);
   const horizon = horizons[safeIndex];
   const selected = data?.stations.find((station) => station.station_id === selectedId);
